@@ -5,9 +5,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const localforage = require('localforage');
+import * as forage from 'localforage';
 
-const store = localforage.createInstance({
+const store = forage.createInstance({
     name: 'scripIn',
 });
 
@@ -61,8 +61,7 @@ export class Scriptin {
 
     async ajax_load(script) {
         try {
-            var { content, type } =
-                (await store.getItem(script.url)) || {};
+            var { content, type } = (await store.getItem(script.url)) || {};
 
             if (!content) {
                 await this.__init();
@@ -118,5 +117,8 @@ export class Scriptin {
     }
 }
 
-window.localforage = localforage;
+export const localforage = forage
+
+window.localforage = forage;
 window.Scriptin = Scriptin;
+
