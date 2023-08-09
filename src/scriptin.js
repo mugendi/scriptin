@@ -55,11 +55,15 @@ export class Scriptin {
 
         let tagEl;
         for (let script of scripts) {
-            tagEl = await this.ajax_load(script);
+            tagEl = await this.__ajax_load(script);
         }
     }
 
-    async ajax_load(script) {
+    clear(){
+        return store.clear()
+    }
+
+    async __ajax_load(script) {
         try {
             var { content, type } = (await store.getItem(script.url)) || {};
 
@@ -87,18 +91,18 @@ export class Scriptin {
                     store.setItem(script.url, { content, type });
                 }
             } else {
-                // console.log(script.url, 'loaded from cache');
+                console.log(script.url, 'loaded from cache');
             }
 
             script = Object.assign(script, { content, type });
 
-            return await this.inject_script(script);
+            return await this.__inject_script(script);
         } catch (error) {
             throw error;
         }
     }
 
-    inject_script({ type, content }) {
+    __inject_script({ type, content }) {
         let tagEl;
 
         if (type == 'js') {
