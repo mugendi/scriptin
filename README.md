@@ -25,4 +25,35 @@ scriptin
     });
 ```
 
-To test the library, download and build (`yarn build`) then serve/load [Example](./example/) 
+## What if the scripts have already been loaded?
+
+Scriptin allows you to load your scripts conditionally based on tests you can run on the browser.
+
+Below is an example of how you would load jQuery and bootstrap files conditionally.
+
+```javascript
+let scripts = [
+    {
+        url: 'https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js',
+        // only load if jquery is not loaded
+        test: !window.jQuery,
+    },
+    {
+        url: 'https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
+        // only load if bootstrap is not loaded
+        test: !jQuery.fn.emulateTransitionEnd,
+    }
+];
+
+await scriptin.load(scripts);
+```
+
+## API
+
+**load(files)** : Expects an array of urls or objects in the form of `{url,test}`. Loads the scripts via AJAX ([axios](https://www.npmjs.com/package/axios)) and injects the code to the header.
+
+**clear()** : Clears all caches.
+
+## Check Out Example!
+
+To test the library, download and build (`yarn build`) then serve/load [Example](./example/)
