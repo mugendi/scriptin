@@ -1,0 +1,30 @@
+{
+  "name": "scriptin",
+  "version": "1.0.0",
+  "description": "Javascript and CSS loaded that uses localforage to cache scripts on browser for super-fast loads.",
+  "main": "src/scriptin.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+    "build:dev": "webpack --watch --config webpack.config.js"
+  },
+  "keywords": [
+    "script",
+    "css",
+    "loader",
+    "cache"
+  ],
+  "author": "Anthony Mugendi <ngurumugz@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "localforage": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

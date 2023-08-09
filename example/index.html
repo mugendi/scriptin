@@ -1,0 +1,34 @@
+<!--
+ Copyright (c) 2023 Anthony Mugendi
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h2>JQuary Loading Test....</h2>
+        <div id="resp"></div>
+    </body>
+
+    <script src="../dist/scriptin.js"></script>
+    <script>
+        let startTime = Date.now();
+        let scriptin = new Scriptin();
+        scriptin
+            .load([
+                'https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js',
+            ])
+            .then(() => {
+                $('#resp').text(
+                    'JQuery loaded in ' + (Date.now() - startTime) + ' ms'
+                );
+            });
+    </script>
+</html>

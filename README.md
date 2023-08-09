@@ -1,0 +1,28 @@
+<!--
+ Copyright (c) 2023 Anthony Mugendi
+
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+# Script-In
+
+This is a Javascript and css resource loader that uses [loclaforage](https://www.npmjs.com/package/loclaforage) to cache dynamically loaded files to ensure they load instantly the second time.
+
+## But Why
+
+When you are building big JS apps, the duration it takes to load some of the needed resources can be long, especially for users with slow internet. Script-In in what you need _to bring your scripts in magically!_
+
+## Usage
+
+```javascript
+let scriptin = new Scriptin();
+
+scriptin
+    .load(['https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js'])
+    .then(() => {
+        console.log('JQuery loaded in ' + (Date.now() - startTime) + ' ms');
+    });
+```
+
+To test the library, download and build (`yarn build`) then serve/load [Example](./example/) 
