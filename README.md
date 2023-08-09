@@ -50,9 +50,19 @@ await scriptin.load(scripts);
 
 ## API
 
-**load(files)** : Expects an array of urls or objects in the form of `{url,test}`. Loads the scripts via AJAX ([axios](https://www.npmjs.com/package/axios)) and injects the code to the header.
+### **`load(files)`** 
+Expects an array of urls or objects in the form of:
 
-**clear()** : Clears all caches.
+```javascript
+{ url:'/url/to/load', test:condition, cache:boolean }
+```
+Loads the scripts via AJAX ([axios](https://www.npmjs.com/package/axios)) and injects the code to the header.
+
+- **`test`** : if test evaluates to a *truthy* value, then the script/css is loaded.
+- **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
+
+### **`clear()`** 
+Clears all caches.
 
 ## Check Out Example!
 
