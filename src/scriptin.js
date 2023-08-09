@@ -49,6 +49,9 @@ export class Scriptin {
                     o = { url: o };
                 }
 
+                // add some defaults
+                o = Object.assign({cache:true},o)
+
                 return o;
             })
             .filter((o) => !o.hasOwnProperty('test') || o.test);
@@ -65,7 +68,8 @@ export class Scriptin {
 
     async __ajax_load(script) {
         try {
-            var { content, type } = (await store.getItem(script.url)) || {};
+            
+            var { content, type } = script.cache ? (await store.getItem(script.url)) || {} : {};
 
             if (!content) {
                 await this.__init();
@@ -86,12 +90,12 @@ export class Scriptin {
                         return { type, content: resp.data };
                     });
 
-                if (content && type) {
+                if (content && type && script.cache) {
                     // save content
                     store.setItem(script.url, { content, type });
                 }
             } else {
-                // console.log(script.url, 'loaded from cache');
+                console.log(script.url, 'loaded from cache');
             }
 
             script = Object.assign(script, { content, type });
