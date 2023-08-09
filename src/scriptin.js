@@ -94,10 +94,9 @@ export class Scriptin {
                     // save content
                     store.setItem(script.url, { content, type });
                 }
-            } else {
-                console.log(script.url, 'loaded from cache');
-            }
+            } 
 
+            
             script = Object.assign(script, { content, type });
 
             return await this.__inject_script(script);
