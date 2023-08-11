@@ -5,127 +5,142 @@
  * https://opensource.org/licenses/MIT
  */
 
-import * as forage from 'localforage';
+import { Store, arrify } from "./lib/utils";
+import Ajax from "./lib/ajax";
 
-const store = forage.createInstance({
-    name: 'scripIn',
-});
-
-function arrify(v) {
-    if (v === undefined) return [];
-    return Array.isArray(v) ? v : [v];
-}
-
+export const ajax = Ajax;
 export class Scriptin {
-    constructor() {
-        this.headEl = document.querySelector('head, body, html');
+  constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
+    this.headEl = document.querySelector("head, body, html");
+    // set opts
+    this.opts = { ttl };
+    // start with local storage
+    this.store = new Store();
+  }
+  async __init() {
+    try {
+      if (window.store) return;
+
+      // load & cache store js
+      await this.__ajax_load({
+        url: "https://cdn.jsdelivr.net/npm/store@2.0.12/dist/store.legacy.min.js",
+        cache: true,
+      });
+
+      // now use storejs (window.store)
+      this.store = new Store(window.store);
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-    __init() {
-        // only if axios is not already loaded
-        if (window.axios) return;
+  }
 
-        const axiosURL =
-            'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js';
+  __head_script(url) {
+    return new Promise((resolve, reject) => {
+      try {
+        const tagEl = document.createElement("script");
+        tagEl.setAttribute("src", url);
+        this.headEl.appendChild(tagEl);
+        tagEl.onload = function () {
+          resolve();
+        };
+      } catch (error) {
+        throw error;
+      }
+    });
+  }
 
-        return new Promise((resolve, reject) => {
-            const tagEl = document.createElement('script');
-            tagEl.setAttribute('src', axiosURL);
-            this.headEl.appendChild(tagEl);
-            tagEl.onload = function () {
-                resolve();
-            };
+  async load(scripts) {
+    await this.__init();
+
+    // test clear
+    // this.store.clear()
+
+    // ensur array
+    scripts = arrify(scripts);
+
+    // map & format each script tag
+    scripts = scripts
+      .map((o) => {
+        // make object if string url was given
+        if (typeof o == "string") {
+          o = { url: o };
+        }
+
+        // add some defaults
+        o = Object.assign({ cache: true }, o);
+
+        return o;
+      })
+      .filter((o) => !o.hasOwnProperty("test") || o.test);
+
+    let tagEl;
+    for (let script of scripts) {
+      tagEl = await this.__ajax_load(script);
+    }
+  }
+
+  clear() {
+    return this.store.clear();
+  }
+
+  async __ajax_load(script) {
+    try {
+      // console.log(this.opts.ttl);
+
+      var { content, type } =
+        script.cache && this.store
+          ? (await this.store.get(script.url)) || {}
+          : {};
+
+      // console.log({ url: script.url, c: content?.length, type });
+
+      if (!content || 1 == 2) {
+        var { content, type } = await ajax.get(script.url).then((resp) => {
+          // get type of loaded content
+          let contentType = resp.headers["content-type"];
+          let type;
+          if (contentType.indexOf("/css;") > -1) {
+            type = "css";
+          } else if (contentType.indexOf("/javascript;") > -1) {
+            type = "js";
+          }
+
+          return { type, content: resp.data };
         });
-    }
 
-    async load(scripts) {
-        // ensur array
-        scripts = arrify(scripts);
-
-        // map & format each script tag
-        scripts = scripts
-            .map((o) => {
-                // make object if string url was given
-                if (typeof o == 'string') {
-                    o = { url: o };
-                }
-
-                // add some defaults
-                o = Object.assign({cache:true},o)
-
-                return o;
-            })
-            .filter((o) => !o.hasOwnProperty('test') || o.test);
-
-        let tagEl;
-        for (let script of scripts) {
-            tagEl = await this.__ajax_load(script);
+        if (content && type && script.cache) {
+          // save content
+          this.store.set(script.url, { content, type }, this.opts.ttl);
         }
+      }
+
+      script = Object.assign(script, { content, type });
+
+      return await this.__inject_script(script);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  __inject_script({ type, content }) {
+    let tagEl;
+
+    if (type == "js") {
+      tagEl = document.createElement("script");
+      this.headEl.appendChild(tagEl);
+      tagEl.textContent = content;
+    } else if (type == "css") {
+      let tagEl = document.createElement("style");
+      // tagEl.setAttribute('type', 'text/css');
+      // tagEl.setAttribute('rel', 'stylesheet');
+      this.headEl.appendChild(tagEl);
+      tagEl.textContent = content;
     }
 
-    clear(){
-        return store.clear()
-    }
-
-    async __ajax_load(script) {
-        try {
-            
-            var { content, type } = script.cache ? (await store.getItem(script.url)) || {} : {};
-
-            if (!content) {
-                await this.__init();
-
-                var { content, type } = await axios
-                    .get(script.url)
-                    .then((resp) => {
-                        // get type of loaded content
-
-                        let contentType = resp.headers['content-type'];
-                        let type;
-                        if (contentType.indexOf('/css;') > -1) {
-                            type = 'css';
-                        } else if (contentType.indexOf('/javascript;') > -1) {
-                            type = 'js';
-                        }
-
-                        return { type, content: resp.data };
-                    });
-
-                if (content && type && script.cache) {
-                    // save content
-                    store.setItem(script.url, { content, type });
-                }
-            } 
-
-            
-            script = Object.assign(script, { content, type });
-
-            return await this.__inject_script(script);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    __inject_script({ type, content }) {
-        let tagEl;
-
-        if (type == 'js') {
-            tagEl = document.createElement('script');
-            this.headEl.appendChild(tagEl);
-            tagEl.textContent = content;
-        } else if (type == 'css') {
-            let tagEl = document.createElement('style');
-            // tagEl.setAttribute('type', 'text/css');
-            // tagEl.setAttribute('rel', 'stylesheet');
-            this.headEl.appendChild(tagEl);
-            tagEl.textContent = content;
-        }
-
-        return tagEl;
-    }
+    return { tagEl, type, content };
+  }
 }
 
-export const localforage = forage
-
-window.localforage = forage;
+window.ajax = ajax;
 window.Scriptin = Scriptin;
-
