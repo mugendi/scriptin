@@ -7,30 +7,29 @@
 
 const webpack = require('webpack');
 const path = require('path');
-const Uglify = require('uglifyjs-webpack-plugin');
-
+const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
-    mode:process.env.NODE_ENV,
+    mode: process.env.NODE_ENV,
     entry: './src/scriptin.js',
+
     output: {
-        filename: 'scriptin.js',
+        clean: true,
+        filename: 'scriptin.min.js',
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
         new webpack.ProvidePlugin({
-            localforage: 'localforage',
+            ajax: 'ajax',
             Scriptin: 'Scriptin',
         }),
+
+        process.env.NODE_ENV == 'production' && new CompressionPlugin(),
     ],
 
     optimization: {
         minimize: process.env.NODE_ENV == 'production',
-        minimizer: [
-            new Uglify({
-                // cache: true,
-                test: /\.js(\?.*)?$/i,
-            }),
-        ],
+        minimizer: [new TerserPlugin()],
     },
 };
