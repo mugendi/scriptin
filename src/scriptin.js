@@ -8,7 +8,9 @@
 import { Store, arrify } from "./lib/utils";
 import Ajax from "./lib/ajax";
 
+// export ajax
 export const ajax = Ajax;
+// export Scriptin
 export class Scriptin {
   constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
     this.headEl = document.querySelector("head, body, html");
@@ -142,5 +144,6 @@ export class Scriptin {
   }
 }
 
+// expose via window for browser use
 window.ajax = ajax;
 window.Scriptin = Scriptin;
