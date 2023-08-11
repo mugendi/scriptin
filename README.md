@@ -25,7 +25,7 @@ import { Scriptin } from 'scriptin';
 
 For Browser 
 ```html
-<script src="/dist/scriptin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mugendi/scriptin@master/dist/scriptin.min.js"></script>
 ```
 
 Then...
