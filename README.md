@@ -7,13 +7,28 @@
 
 # Script-In
 
-This is a Javascript and css resource loader that uses [loclaforage](https://www.npmjs.com/package/loclaforage) to cache dynamically loaded files to ensure they load instantly the second time.
+This is a Javascript and css resource loader that uses [store.js](https://github.com/marcuswestin/store.js) to cache dynamically loaded files to ensure they load instantly the second time.
 
 ## But Why
 
 When you are building big JS apps, the duration it takes to load some of the needed resources can be long, especially for users with slow internet. Script-In in what you need _to bring your scripts in magically!_
 
+Also I wanted a very tiny script that will be super fast to load and then manage all other scripts. Script-In weighs in at 3.6 kb when minified and 1.7kb when gzipped!
+
 ## Usage
+
+For NodeJs
+
+```javascript
+import { Scriptin } from 'scriptin';
+```
+
+For Browser 
+```html
+<script src="/dist/scriptin.min.js"></script>
+```
+
+Then...
 
 ```javascript
 let scriptin = new Scriptin();
@@ -42,7 +57,7 @@ let scripts = [
         url: 'https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
         // only load if bootstrap is not loaded
         test: !jQuery.fn.emulateTransitionEnd,
-    }
+    },
 ];
 
 await scriptin.load(scripts);
@@ -50,19 +65,52 @@ await scriptin.load(scripts);
 
 ## API
 
-### **`load(files)`** 
+### **`load(files)`**
+
 Expects an array of urls or objects in the form of:
 
 ```javascript
 { url:'/url/to/load', test:condition, cache:boolean }
 ```
-Loads the scripts via AJAX ([axios](https://www.npmjs.com/package/axios)) and injects the code to the header.
 
-- **`test`** : if test evaluates to a *truthy* value, then the script/css is loaded.
-- **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
+Loads the scripts via AJAX ([See Exports](#note-on-exports)) and injects the code to the header.
 
-### **`clear()`** 
+-   **`test`** : if test evaluates to a _truthy_ value, then the script/css is loaded.
+-   **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
+
+### **`clear()`**
+
 Clears all caches.
+
+### Note on exports
+
+If importing this script, note that it also exports
+`Scriptin` and `ajax`. Ajax has an API almost similar to [axios](https://www.npmjs.com/package/axios). Below is an example of how it is used.
+
+```javascript
+(async () => {
+    try {
+        const url =
+            'https://cdn.jsdelivr.net/npm/store@2.0.12/dist/store.legacy.min.js';
+
+        const { content, type } = await ajax.get(url).then((resp) => {
+            // NOTE: resp contains `data` and 'headers` props
+            // get type of loaded content
+            let contentType = resp.headers['content-type'];
+            let type;
+            if (contentType.indexOf('/css;') > -1) {
+                type = 'css';
+            } else if (contentType.indexOf('/javascript;') > -1) {
+                type = 'js';
+            }
+
+            return { type, content: resp.data };
+        });
+    } catch (error) {
+        throw error;
+    }
+})();
+```
 
 ## Check Out Example!
 
