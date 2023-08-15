@@ -13,7 +13,11 @@ export const ajax = Ajax;
 // export Scriptin
 export class Scriptin {
   constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
-    this.headEl = document.querySelector("head, body, html");
+    this.headEl =
+      document.querySelector("head") ||
+      document.querySelector("body") ||
+      document.querySelector("html");
+
     // set opts
     this.opts = { ttl };
     // start with local storage
