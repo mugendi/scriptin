@@ -87,7 +87,7 @@ export class Scriptin {
   }
 
   clear() {
-    return this.store.clear();
+    return this.store && this.store.clear();
   }
 
   async __ajax_load(script) {

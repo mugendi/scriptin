@@ -32,7 +32,7 @@ export class LocalStorage {
   }
 
   clearAll() {
-    return localStorage().clear();
+    return localStorage.clear();
   }
 }
 
@@ -72,6 +72,6 @@ export class Store {
   }
 
   clear() {
-    return store.clearAll();
+    return this.store.clearAll();
   }
 }
