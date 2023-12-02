@@ -87,11 +87,14 @@ function httpRequest(url, method, data, success_callback, failure_callback) {
     };
   }
 
-  if (method == "post" || method == "POST") {
-    method = "POST";
-  } else {
+  
+  if (!method) {
     method = "GET";
   }
+
+  method = method.toUpperCase();
+
+  // console.log({method});
 
   xhr.open(method, url, true);
 

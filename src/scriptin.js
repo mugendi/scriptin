@@ -24,6 +24,7 @@ export class Scriptin {
     // start with local storage
     this.store = new Store();
   }
+
   async __init() {
     try {
       if (window.store) return;
@@ -97,7 +98,7 @@ export class Scriptin {
 
       // console.log({script});
 
-      var { content, type } =
+      var { content, type, ts } =
         script.cache && this.store
           ? (await this.store.get(script.url)) || {}
           : {};
@@ -110,6 +111,7 @@ export class Scriptin {
           // get type of loaded content
           let contentType = resp.headers["content-type"];
           let type;
+
           if (contentType.indexOf("/css;") > -1) {
             type = "css";
           } else if (contentType.indexOf("/javascript;") > -1) {
@@ -120,12 +122,23 @@ export class Scriptin {
         }));
 
         if (content && type && script.cache) {
+          let ts = Date.now();
+          let ttl = script.ttl || this.opts.ttl;
           // save content
-          this.store.set(script.url, { content, type }, this.opts.ttl);
+          this.store.set(script.url, { content, type, ts }, ttl);
+        }
+      } else {
+        let { headers } = await ajax.head(script.url);
+        let modified = headers["last-modified"];
+        if (modified) {
+          let modifiedTs = new Date(modified).getTime();
+          // if file has changed
+          if (ts < modifiedTs) {
+            // console.log(script.url, ' >> changed');
+            this.store.remove(script.url);
+          }
         }
       }
-
-      //  console.log({content, type });
 
       script = Object.assign(script, { content, type });
 

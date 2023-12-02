@@ -31,6 +31,11 @@ export class LocalStorage {
     return localStorage.setItem(key, JSON.stringify(data));
   }
 
+  remove(key) {
+    if (!window.localStorage) return null;
+    return localStorage.removeItem(key);
+  }
+
   clearAll() {
     if (!window.localStorage) return null;
     return localStorage.clear();
@@ -40,7 +45,7 @@ export class LocalStorage {
 // extend store to for easy expiration management
 // this class exists, even th
 export class Store {
-  
+
   constructor(store) {
     this.store = store || new LocalStorage();
   }
@@ -52,7 +57,7 @@ export class Store {
 
     const { expire, value } = data;
 
-    if (expire < Date.now()) {
+    if (expire && expire < Date.now()) {
       this.store.remove(key);
       return null;
     }
@@ -70,10 +75,15 @@ export class Store {
       throw new Error(`Expire must be either a date or int (seconds)`);
     }
 
-    return this.store.set(key, { value, expire }, expire);
+    return this.store.set(key, { value, expire });
+  }
+
+  remove(key){
+    return this.store.set(key);
   }
 
   clear() {
     return this.store.clearAll();
   }
 }
+
