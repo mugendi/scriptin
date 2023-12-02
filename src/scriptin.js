@@ -13,14 +13,14 @@ export const ajax = Ajax;
 
 // export Scriptin
 export class Scriptin {
-  constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
+  constructor({ ttl = 2592000 /* default 1 month */, dev = false } = {}) {
     this.headEl =
       document.querySelector("head") ||
       document.querySelector("body") ||
       document.querySelector("html");
 
     // set opts
-    this.opts = { ttl };
+    this.opts = { ttl, dev };
     // start with local storage
     this.store = new Store();
   }
@@ -140,7 +140,11 @@ export class Scriptin {
         }
       }
 
-      script = Object.assign(script, { content, type });
+      script = Object.assign(script, {
+        content,
+        type,
+        dev: script.dev || this.opts.dev,
+      });
 
       if (!script.type) {
         // throw error
@@ -155,21 +159,28 @@ export class Scriptin {
     }
   }
 
-  __inject_script({ type, content }) {
+  __inject_script({ type, content, url, dev }) {
     let tagEl;
 
     if (type == "js") {
       tagEl = document.createElement("script");
-      this.headEl.appendChild(tagEl);
-      tagEl.textContent = content;
+      tagEl.setAttribute("type", "text/javascript");
+
+      // add source map url
+      if (dev) {
+        content += `\n//# sourceURL=${url};`;
+      }
     } else if (type == "css") {
-      let tagEl = document.createElement("style");
-      // tagEl.setAttribute('type', 'text/css');
-      // tagEl.setAttribute('rel', 'stylesheet');
-      this.headEl.appendChild(tagEl);
-      tagEl.textContent = content;
+      tagEl = document.createElement("style");
+      tagEl.setAttribute("type", "text/css");
+      tagEl.setAttribute("rel", "stylesheet");
     }
 
+    tagEl.setAttribute("data-url", url);
+
+    this.headEl.appendChild(tagEl);
+
+    tagEl.textContent = content;
     return { tagEl, type, content };
   }
 }
