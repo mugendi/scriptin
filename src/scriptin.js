@@ -10,6 +10,7 @@ import Ajax from "./lib/ajax";
 
 // export ajax
 export const ajax = Ajax;
+
 // export Scriptin
 export class Scriptin {
   constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
@@ -87,12 +88,14 @@ export class Scriptin {
   }
 
   clear() {
-    return this.store && this.store.clear();
+    return this.store.clear();
   }
 
   async __ajax_load(script) {
     try {
       // console.log(this.opts.ttl);
+
+      // console.log({script});
 
       var { content, type } =
         script.cache && this.store
@@ -101,8 +104,9 @@ export class Scriptin {
 
       // console.log({ url: script.url, c: content?.length, type });
 
-      if (!content || 1 == 2) {
-        var { content, type } = await ajax.get(script.url).then((resp) => {
+      if (!content) {
+        ({ content, type } = await ajax.get(script.url).then((resp) => {
+          // console.log("headers", script.url, resp.headers);
           // get type of loaded content
           let contentType = resp.headers["content-type"];
           let type;
@@ -113,7 +117,7 @@ export class Scriptin {
           }
 
           return { type, content: resp.data };
-        });
+        }));
 
         if (content && type && script.cache) {
           // save content
@@ -121,7 +125,16 @@ export class Scriptin {
         }
       }
 
+      //  console.log({content, type });
+
       script = Object.assign(script, { content, type });
+
+      if (!script.type) {
+        // throw error
+        throw new Error(
+          `Content type for '${script.url}' could not be determined. Ensure that the server is serving css and javascript files with appropriate 'content-type' headers.`,
+        );
+      }
 
       return await this.__inject_script(script);
     } catch (error) {
