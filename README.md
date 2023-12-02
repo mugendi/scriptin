@@ -23,7 +23,8 @@ For NodeJs
 import { Scriptin } from 'scriptin';
 ```
 
-For Browser 
+For Browser
+
 ```html
 <script src="https://cdn.jsdelivr.net/gh/mugendi/scriptin@master/dist/scriptin.min.js"></script>
 ```
@@ -65,18 +66,23 @@ await scriptin.load(scripts);
 
 ## API
 
+### `new Scriptin({ttl:number})`
+
+You can set a global `ttl` that will determine how long cached items are kept in the cache. The default value is `2592000` seconds or **1 month**.
+
 ### **`load(files)`**
 
 Expects an array of urls or objects in the form of:
 
 ```javascript
-{ url:'/url/to/load', test:condition, cache:boolean }
+{ url:'/url/to/load', test:condition, cache:boolean, ttl:number, dev:true }
 ```
 
 Loads the scripts via AJAX ([See Exports](#note-on-exports)) and injects the code to the header.
 
 -   **`test`** : if test evaluates to a _truthy_ value, then the script/css is loaded.
 -   **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
+-   **`ttl`**: determines how long the script/style is cached. Value is in seconds.
 
 ### **`clear()`**
 
@@ -90,22 +96,11 @@ If importing this script, note that it also exports
 ```javascript
 (async () => {
     try {
-        const url =
-            'https://cdn.jsdelivr.net/npm/store@2.0.12/dist/store.legacy.min.js';
+        import { ajax } from 'scriptin';
 
-        const { content, type } = await ajax.get(url).then((resp) => {
-            // NOTE: resp contains `data` and 'headers` props
-            // get type of loaded content
-            let contentType = resp.headers['content-type'];
-            let type;
-            if (contentType.indexOf('/css;') > -1) {
-                type = 'css';
-            } else if (contentType.indexOf('/javascript;') > -1) {
-                type = 'js';
-            }
+        const url = 'https://example.com';
 
-            return { type, content: resp.data };
-        });
+        const { data, headers } = await ajax.get(url);
     } catch (error) {
         throw error;
     }
