@@ -1,6 +1,6 @@
 {
     "name": "scriptin",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "Javascript and CSS loaded that uses localforage to cache scripts on browser for super-fast loads.",
     "main": "src/scriptin.js",
     "directories": {
