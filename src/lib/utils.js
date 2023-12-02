@@ -32,6 +32,7 @@ export class LocalStorage {
   }
 
   clearAll() {
+    if (!window.localStorage) return null;
     return localStorage.clear();
   }
 }
@@ -39,6 +40,7 @@ export class LocalStorage {
 // extend store to for easy expiration management
 // this class exists, even th
 export class Store {
+  
   constructor(store) {
     this.store = store || new LocalStorage();
   }
