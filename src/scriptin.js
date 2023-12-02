@@ -13,14 +13,14 @@ export const ajax = Ajax;
 
 // export Scriptin
 export class Scriptin {
-  constructor({ ttl = 2592000 /* default 1 month */, dev = false } = {}) {
+  constructor({ ttl = 2592000 /* default 1 month */ } = {}) {
     this.headEl =
       document.querySelector("head") ||
       document.querySelector("body") ||
       document.querySelector("html");
 
     // set opts
-    this.opts = { ttl, dev };
+    this.opts = { ttl };
     // start with local storage
     this.store = new Store();
   }
@@ -143,7 +143,6 @@ export class Scriptin {
       script = Object.assign(script, {
         content,
         type,
-        dev: script.dev || this.opts.dev,
       });
 
       if (!script.type) {
@@ -159,21 +158,23 @@ export class Scriptin {
     }
   }
 
-  __inject_script({ type, content, url, dev }) {
+  __inject_script({ type, content, url }) {
     let tagEl;
+
+    // https://sourcemaps.info/spec.html
+    let sourceURL = `//# sourceURL=${url};`;
 
     if (type == "js") {
       tagEl = document.createElement("script");
       tagEl.setAttribute("type", "text/javascript");
-
-      // add source map url
-      if (dev) {
-        content += `\n//# sourceURL=${url};`;
-      }
+      // add source url
+      content += `\n${sourceURL}`;
     } else if (type == "css") {
       tagEl = document.createElement("style");
       tagEl.setAttribute("type", "text/css");
       tagEl.setAttribute("rel", "stylesheet");
+      // add source url
+      content += `\n/* ${sourceURL} */`;
     }
 
     tagEl.setAttribute("data-url", url);
@@ -181,6 +182,7 @@ export class Scriptin {
     this.headEl.appendChild(tagEl);
 
     tagEl.textContent = content;
+
     return { tagEl, type, content };
   }
 }
