@@ -83,8 +83,15 @@ export class Scriptin {
       .filter((o) => !o.hasOwnProperty("test") || o.test);
 
     let tagEl;
+
+    this.reloadPage = false;
+
     for (let script of scripts) {
       tagEl = await this.__ajax_load(script);
+    }
+
+    if (this.reloadPage) {
+      window.location.reload();
     }
   }
 
@@ -134,8 +141,10 @@ export class Scriptin {
           let modifiedTs = new Date(modified).getTime();
           // if file has changed
           if (ts < modifiedTs) {
-            // console.log(script.url, ' >> changed');
+            console.log(script.url, " >> changed");
             this.store.remove(script.url);
+            // set  reloadPage as true
+            this.reloadPage = true;
           }
         }
       }
