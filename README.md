@@ -107,6 +107,10 @@ If importing this script, note that it also exports
 })();
 ```
 
+## Invalidating Caches
+
+This library is built to automatically invalidate caches when cached files change. However, for this to work, ensure that your server sends the correct `last-modified` header as the date will be used to determine which caches should be invalidated.
+
 ## Check Out Example!
 
 To test the library, download and build (`yarn build`) then serve/load [Example](./example/)
