@@ -44,7 +44,7 @@ export class Scriptin {
   }
 
   __head_script(url) {
-    return new Promise((resolve, reject) => {
+    return new Promise(function (resolve, reject) {
       try {
         const tagEl = document.createElement("script");
         tagEl.setAttribute("src", url);
@@ -68,31 +68,38 @@ export class Scriptin {
     scripts = arrify(scripts);
 
     // map & format each script tag
-    scripts = scripts
-      .map((o) => {
-        // make object if string url was given
-        if (typeof o == "string") {
-          o = { url: o };
-        }
+    scripts = scripts.map(function (o) {
+      // make object if string url was given
+      if (typeof o == "string") {
+        o = { url: o };
+      }
 
-        // add some defaults
-        o = Object.assign({ cache: true }, o);
+      // add some defaults
+      o = Object.assign({ cache: true }, o);
 
-        return o;
-      })
-      .filter((o) => !o.hasOwnProperty("test") || o.test);
-
-    let tagEl;
+      return o;
+    });
 
     this.reloadPage = false;
 
+    let responses = {};
+
     for (let script of scripts) {
-      tagEl = await this.__ajax_load(script);
+      responses[script.url] = await this.__ajax_load(script).then(
+        function (resp) {
+          return resp.content;
+        },
+      );
     }
 
     if (this.reloadPage) {
-      window.location.reload();
+      setTimeout(function () {
+        window.location.reload();
+      }, 0);
     }
+
+    // console.log(responses);
+    return responses;
   }
 
   clear() {
@@ -112,23 +119,36 @@ export class Scriptin {
 
       // console.log({ url: script.url, c: content?.length, type });
 
+      // console.log(script);
+
       if (!content) {
-        ({ content, type } = await ajax.get(script.url).then((resp) => {
+        ({ content, type } = await ajax.get(script.url).then(function (resp) {
           // console.log("headers", script.url, resp.headers);
           // get type of loaded content
-          let contentType = resp.headers["content-type"];
-          let type;
+          let { type } = script;
 
-          if (contentType.indexOf("/css;") > -1) {
-            type = "css";
-          } else if (contentType.indexOf("/javascript;") > -1) {
-            type = "js";
+          if (!type) {
+            // console.log(script);
+            let contentType = (
+              resp.headers["content-type"] || ""
+            ).toLowerCase();
+            type = contentType.split(";")[0];
+            type = type.split("/").pop();
           }
 
-          return { type, content: resp.data };
+          if (type == "json") {
+            content = JSON.parse(resp.data);
+          } else {
+            content = resp.data;
+          }
+
+          // console.log({ type, content});
+
+          return { type, content };
         }));
 
         if (content && type && script.cache) {
+          // console.log('>>>');
           let ts = Date.now();
           let ttl = script.ttl || this.opts.ttl;
           // save content
@@ -161,7 +181,20 @@ export class Scriptin {
         );
       }
 
-      return await this.__inject_script(script);
+      // console.log(script);
+      let scriptTypes = ["javascript", "css"];
+
+      if (
+        // is css or js
+        scriptTypes.indexOf(script.type) > -1 &&
+        // can be injected
+        script.inject !== false
+      ) {
+        return this.__inject_script(script);
+      }
+
+      // return script
+      return script;
     } catch (error) {
       throw error;
     }
@@ -173,7 +206,7 @@ export class Scriptin {
     // https://sourcemaps.info/spec.html
     let sourceURL = `//# sourceURL=${url};`;
 
-    if (type == "js") {
+    if (type == "javascript") {
       tagEl = document.createElement("script");
       tagEl.setAttribute("type", "text/javascript");
       // add source url
@@ -190,8 +223,11 @@ export class Scriptin {
 
     this.headEl.appendChild(tagEl);
 
+    // console.log(content);
+
     tagEl.textContent = content;
 
+    // return
     return { tagEl, type, content };
   }
 }

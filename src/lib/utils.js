@@ -16,11 +16,13 @@ export class LocalStorage {
     try {
       if (!window.localStorage) return null;
       const resp = localStorage.getItem(key);
+      // console.log({resp});
       if (resp) {
         value = JSON.parse(resp);
       }
     } catch (error) {
       console.error(error);
+      value = null;
     }
 
     return value;
