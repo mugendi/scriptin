@@ -129,8 +129,6 @@ function httpRequest(
   xhr.open(method, url, true);
 
   for (let key in headers) {
-    // console.log({key, h:headers[key]});
-    console.log('key', key, headers[key]);
     xhr.setRequestHeader(key, headers[key]);
   }
 
