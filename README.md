@@ -109,9 +109,9 @@ You can set a global `ttl` that will determine how long cached items are kept in
 Expects an array of urls or objects in the form of:
 
 ```javascript
-{ 
-    url:'/url/to/load', 
-    test:condition, 
+{
+    url:'/url/to/load',
+    test:condition,
     cache:boolean, //set to false ro disable cache
     ttl:number, // how long a script is to be cached
     inject: true // default = true. Set to false to stop scripts from injecting
@@ -120,8 +120,7 @@ Expects an array of urls or objects in the form of:
 
 Loads the scripts via AJAX ([See Exports](#note-on-exports)).
 
-If the `url` loaded is either a javascript or css file (based on the  `content-type` header returned) and `inject` is not `false` the file content is injected to the page `<head>`.
-
+If the `url` loaded is either a javascript or css file (based on the `content-type` header returned) and `inject` is not `false` the file content is injected to the page `<head>`.
 
 - **`test`** : if test evaluates to a _truthy_ value, then the script/css is loaded.
 - **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
@@ -143,8 +142,15 @@ If importing this script, note that it also exports
     import { ajax } from 'scriptin';
 
     const url = 'https://example.com';
+    const payload = { test: 'data' };
+    const opts = {
+      headers: {
+        // default POST/PUT header is 'application/json'
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+    };
 
-    const { data, headers } = await ajax.get(url);
+    const { data, headers } = await ajax.post(url, payload, opts);
   } catch (error) {
     throw error;
   }
