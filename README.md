@@ -35,10 +35,12 @@ Then...
 let scriptin = new Scriptin();
 
 scriptin
-    .load(['https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js'])
-    .then(() => {
-        console.log('JQuery loaded in ' + (Date.now() - startTime) + ' ms');
-    });
+  .load(['https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js'])
+  .then((resp) => {
+    console.log('JQuery loaded in ' + (Date.now() - startTime) + ' ms');
+
+    console.log(resp);
+  });
 ```
 
 ## What if the scripts have already been loaded?
@@ -49,20 +51,52 @@ Below is an example of how you would load jQuery and bootstrap files conditional
 
 ```javascript
 let scripts = [
-    {
-        url: 'https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js',
-        // only load if jquery is not loaded
-        test: !window.jQuery,
-    },
-    {
-        url: 'https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
-        // only load if bootstrap is not loaded
-        test: !jQuery.fn.emulateTransitionEnd,
-    },
+  {
+    url: 'https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js',
+    // only load if jquery is not loaded
+    test: !window.jQuery,
+  },
+  {
+    url: 'https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
+    // only load if bootstrap is not loaded
+    test: !jQuery.fn.emulateTransitionEnd,
+  },
 ];
 
 await scriptin.load(scripts);
 ```
+
+## Json & other Files
+
+It is worth noting that `load()` resolves with an object keyed by the url strings where each value is the content loaded by that url.
+
+For example, you can load a json file and persist it in browser cache via the following code:
+
+```javascript
+let resp = await criptin.load(['/some-api/package.json']);
+
+console.log(resp);
+
+// access the JSON object via : resp['/some-api/package.json']
+```
+
+This will output the json:
+
+```json
+{
+  "/some-api/package.json": {
+    "name": "scriptin",
+    "version": "1.0.12",
+    "description": "Javascript and CSS loaded that uses localforage to cache scripts on browser for super-fast loads.",
+    "main": "src/scriptin.js",
+    ...
+  }
+}
+```
+
+This allows you to load and cache JSON and other content. Please note that JSON content types are automatically parsed when `content-type` header is correctly set to `json`.
+
+As you will see below, the `content-type` and `last-modified` headers are very important and are used to determine how loaded content is handled. `javascript` and `css` files are automatically injected into the head.
 
 ## API
 
@@ -75,14 +109,24 @@ You can set a global `ttl` that will determine how long cached items are kept in
 Expects an array of urls or objects in the form of:
 
 ```javascript
-{ url:'/url/to/load', test:condition, cache:boolean, ttl:number, dev:true }
+{ 
+    url:'/url/to/load', 
+    test:condition, 
+    cache:boolean, //set to false ro disable cache
+    ttl:number, // how long a script is to be cached
+    inject: true // default = true. Set to false to stop scripts from injecting
+}
 ```
 
-Loads the scripts via AJAX ([See Exports](#note-on-exports)) and injects the code to the header.
+Loads the scripts via AJAX ([See Exports](#note-on-exports)).
 
--   **`test`** : if test evaluates to a _truthy_ value, then the script/css is loaded.
--   **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
--   **`ttl`**: determines how long the script/style is cached. Value is in seconds.
+If the `url` loaded is either a javascript or css file (based on the  `content-type` header returned) and `inject` is not `false` the file content is injected to the page `<head>`.
+
+
+- **`test`** : if test evaluates to a _truthy_ value, then the script/css is loaded.
+- **`cache`** : is `true` be default. Set to `false` to prevent specific files from being cached.
+- **`ttl`**: determines how long the script/style is cached. Value is in seconds.
+- **`inject`**: Determines if javascript and css tags are injected into the `<head>` of the page. Default is `true`
 
 ### **`clear()`**
 
@@ -95,15 +139,15 @@ If importing this script, note that it also exports
 
 ```javascript
 (async () => {
-    try {
-        import { ajax } from 'scriptin';
+  try {
+    import { ajax } from 'scriptin';
 
-        const url = 'https://example.com';
+    const url = 'https://example.com';
 
-        const { data, headers } = await ajax.get(url);
-    } catch (error) {
-        throw error;
-    }
+    const { data, headers } = await ajax.get(url);
+  } catch (error) {
+    throw error;
+  }
 })();
 ```
 
