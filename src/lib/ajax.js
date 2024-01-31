@@ -6,17 +6,45 @@
  */
 
 // Ref:https://gist.github.com/Danilovonline/1b87ef2ff1b1e0b19714a8b2e6246856
-function httpRequest(url, method, data, success_callback, failure_callback) {
+function httpRequest(
+  url,
+  method,
+  data,
+  opts,
+  success_callback,
+  failure_callback
+) {
   var xhr;
+
+  // defaults options
+  let defaultOpts = {};
+
+  // for post/put methods
+  if (['POST', 'PUT'].indexOf(method)) {
+    defaultOpts['content-type'] = 'application/json';
+  }
+
+  opts = Object.assign(defaultOpts, opts);
+
+  var headers = {};
+
+  for (let k in opts.headers) {
+    headers[k.toLowerCase()] = opts.headers[k];
+  }
 
   var data2 = [];
   if (typeof data == 'object') {
-    for (var index in data) {
-      if (data.hasOwnProperty(index)) {
-        data2[data2.length] = index + '=' + data[index];
+    // format data
+    if (headers['content-type'] == 'application/json') {
+      data = JSON.stringify(data);
+    } else {
+      for (var index in data) {
+        if (data.hasOwnProperty(index)) {
+          data2[data2.length] = index + '=' + data[index];
+        }
       }
+      data = data2.join('&');
     }
-    data = data2.join('&');
   }
   if (typeof XMLHttpRequest !== 'undefined') {
     xhr = new XMLHttpRequest();
@@ -100,8 +128,10 @@ function httpRequest(url, method, data, success_callback, failure_callback) {
 
   xhr.open(method, url, true);
 
-  if (method == 'POST') {
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  for (let key in headers) {
+    // console.log({key, h:headers[key]});
+    console.log('key', key, headers[key]);
+    xhr.setRequestHeader(key, headers[key]);
   }
 
   xhr.send(data);
@@ -111,17 +141,19 @@ class Ajax {
   constructor({ methods = ['get', 'post', 'head', 'put', 'post'] } = {}) {
     for (let method of methods) {
       this[method] = function (url, data, opts = {}) {
-        return this.__fetch(url, method, data);
+        return this.__fetch(url, method, data, opts);
       };
     }
   }
 
-  __fetch(url, method, data) {
+  __fetch(url, method, data, opts) {
+    // console.log({data});
     return new Promise(function (resolve, reject) {
       httpRequest(
         url,
         method,
         data,
+        opts,
         function (xhr) {
           // console.log(xhr);
           resolve({ data: xhr.responseText, headers: xhr.headers });
