@@ -29,8 +29,9 @@ export class LocalStorage {
   }
 
   set(key, data) {
+    console.log({ key, data });
     if (!window.localStorage) return null;
-    return localStorage.setItem(key, JSON.stringify(data));
+    return localStorage.setItem(key, data ? JSON.stringify(data) : null);
   }
 
   remove(key) {
@@ -47,7 +48,6 @@ export class LocalStorage {
 // extend store to for easy expiration management
 // this class exists, even th
 export class Store {
-
   constructor(store) {
     this.store = store || new LocalStorage();
   }
@@ -69,7 +69,7 @@ export class Store {
 
   set(key, value, expire = null) {
     //format expire
-    if (expire && typeof expire === "number") {
+    if (expire && typeof expire === 'number') {
       expire = Math.round(expire * 1000 + Date.now());
     } else if (expire && expire instanceof Date) {
       expire = expire.getTime();
@@ -80,7 +80,7 @@ export class Store {
     return this.store.set(key, { value, expire });
   }
 
-  remove(key){
+  remove(key) {
     return this.store.set(key);
   }
 
@@ -88,4 +88,3 @@ export class Store {
     return this.store.clearAll();
   }
 }
-
