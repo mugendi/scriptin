@@ -5,7 +5,8 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { Store, arrify } from "./lib/utils";
+import { arrify } from "./lib/utils";
+import store from "store";
 import Ajax from "./lib/ajax";
 
 // export ajax
@@ -22,25 +23,7 @@ export class Scriptin {
     // set opts
     this.opts = { ttl };
     // start with local storage
-    this.store = new Store();
-  }
-
-  async __init() {
-    try {
-      if (window.store) return;
-
-      // load & cache store js
-      await this.__ajax_load({
-        url: "https://cdn.jsdelivr.net/npm/store@2.0.12/dist/store.legacy.min.js",
-        cache: true,
-      });
-
-      // now use storejs (window.store)
-      this.store = new Store(window.store);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    this.store = store;
   }
 
   __head_script(url) {
@@ -59,8 +42,6 @@ export class Scriptin {
   }
 
   async load(scripts) {
-    await this.__init();
-
     // test clear
     // this.store.clear()
 
@@ -152,7 +133,9 @@ export class Scriptin {
           let ts = Date.now();
           let ttl = script.ttl || this.opts.ttl;
           // save content
-          this.store.set(script.url, { content, type, ts }, ttl);
+          if (this.store && this.store.set) {
+            this.store.set(script.url, { content, type, ts }, ttl);
+          }
         }
       } else {
         let { headers } = await ajax.head(script.url);
