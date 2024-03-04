@@ -6,11 +6,12 @@
  */
 
 import { arrify } from "./lib/utils.js";
-import store from "store";
 import Ajax from "./lib/ajax.js";
-
+// store
+import store from "store";
 // add expire plugin
-const expirePlugin = require("store/plugins/expire");
+import expirePlugin from "store/plugins/expire";
+
 store.addPlugin(expirePlugin);
 
 // export ajax
