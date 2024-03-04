@@ -5,12 +5,16 @@
  * https://opensource.org/licenses/MIT
  */
 
-const webpack = require('webpack');
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
+import webpack from 'webpack';
+import TerserPlugin from 'terser-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
     mode: process.env.NODE_ENV,
     entry: './src/scriptin.js',
 
@@ -18,6 +22,8 @@ module.exports = {
         clean: true,
         filename: 'scriptin.min.js',
         path: path.resolve(__dirname, 'dist'),
+        library: 'scriptin',
+        libraryTarget: 'umd'
     },
     plugins: [
         new webpack.ProvidePlugin({

@@ -17,11 +17,13 @@ function httpRequest(
   var xhr;
 
   // defaults options
-  let defaultOpts = {};
+  let defaultOpts = { headers: {} };
+
+  method = method.toUpperCase();
 
   // for post/put methods
-  if (['POST', 'PUT'].indexOf(method)) {
-    defaultOpts['content-type'] = 'application/json';
+  if (['POST', 'PUT'].indexOf(method) > -1) {
+    defaultOpts.headers['content-type'] = 'application/json';
   }
 
   opts = Object.assign(defaultOpts, opts);

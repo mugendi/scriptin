@@ -5,9 +5,9 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { arrify } from "./lib/utils";
+import { arrify } from "./lib/utils.js";
 import store from "store";
-import Ajax from "./lib/ajax";
+import Ajax from "./lib/ajax.js";
 
 // export ajax
 export const ajax = Ajax;
@@ -26,6 +26,22 @@ export class Scriptin {
     this.store = store;
   }
 
+  async __init() {
+    try {
+      // if (window.store) return;
+      // load & cache store js
+      // await this.__ajax_load({
+      //   url: 'https://cdn.jsdelivr.net/npm/store@2.0.12/dist/store.legacy.min.js',
+      //   cache: true,
+      // });
+      // now use storejs (window.store)
+      // this.store = new Store(window.store);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   __head_script(url) {
     return new Promise(function (resolve, reject) {
       try {
@@ -42,6 +58,7 @@ export class Scriptin {
   }
 
   async load(scripts) {
+    // await this.__init();
     // test clear
     // this.store.clear()
 
@@ -215,6 +232,9 @@ export class Scriptin {
   }
 }
 
-// expose via window for browser use
-window.ajax = ajax;
-window.Scriptin = Scriptin;
+if (window && !!window.open) {
+  // expose via window for browser use
+  window.store = store;
+  window.ajax = ajax;
+  window.scriptin = new Scriptin();
+}
