@@ -10,7 +10,7 @@ import Ajax from "./lib/ajax.js";
 // store
 import store from "store";
 // add expire plugin
-import expirePlugin from "store/plugins/expire";
+import expirePlugin from "store/plugins/expire.js";
 
 store.addPlugin(expirePlugin);
 
