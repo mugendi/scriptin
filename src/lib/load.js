@@ -14,8 +14,8 @@ import { addSeconds, isBefore } from 'date-fns';
 
 export function loadScript(script, options = {}) {
   // console.log({options});
-  let now = new Date();
-  let TTL = null;
+  var now = new Date();
+  var TTL = null;
 
   // set TTL
   if (typeof options.ttl == 'number' && options.ttl > 0) {
@@ -29,7 +29,6 @@ export function loadScript(script, options = {}) {
     .then(function (cachedScript) {
       // if we have cached data
       if (cachedScript) {
-
         var resetCache = resetScriptCache(script, cachedScript, TTL, now);
 
         if (resetCache) {
@@ -61,7 +60,7 @@ export function loadScript(script, options = {}) {
       // load script via ajax
       return ajax
         .get(script.url, {}, { responseType: responseType })
-        .then((ajaxResp) => {
+        .then(function (ajaxResp) {
           // cache script
           // otherwise load
 
@@ -69,7 +68,7 @@ export function loadScript(script, options = {}) {
 
           // get/make data URI
           if (script.returnType === 'dataURI') {
-            return toDataURI(content).then((content) => {
+            return toDataURI(content).then(function (content) {
               return { ajaxResp, content };
             });
           }
@@ -156,7 +155,7 @@ export function loadScript(script, options = {}) {
 }
 
 function resetScriptCache(script, cachedScript, TTL, now) {
-  let reset = false;
+  var reset = false;
 
   // if expired
   if (cachedScript.ttlTill) {
@@ -180,7 +179,7 @@ function resetScriptCache(script, cachedScript, TTL, now) {
 
 function checkScriptExpiry(script) {
   // make head request
-  return ajax.head(script.url).then((ajaxResp) => {
+  return ajax.head(script.url).then(function (ajaxResp) {
     // console.log(scr);
 
     var scriptExpiry = checkHeaderExpiry(script, ajaxResp);
@@ -190,7 +189,7 @@ function checkScriptExpiry(script) {
       console.log(script.url, ' changed. Reloading...');
       // delete script cache
       del(script.url)
-        .then((resp) => {
+        .then(function (resp) {
           //   console.log('Purged', script.url);
           setTimeout(function () {
             window.location.reload();
@@ -234,4 +233,3 @@ function injectScript(script) {
   // return
   return tagEl;
 }
-

@@ -13,7 +13,7 @@ export function arrify(v) {
   return Array.isArray(v) ? v : [v];
 }
 
-export function getHeaderType( ajaxResp) {
+export function getHeaderType(ajaxResp) {
   // console.log(script);
   var contentType = (ajaxResp.headers['content-type'] || '').toLowerCase();
   var type = contentType.split(';')[0];
@@ -80,12 +80,11 @@ export function checkHeaderExpiry(script, ajaxResp) {
   return { date, expires, isExpired, lastModified };
 }
 
-
 export function toDataURI(content) {
   // ony work with blobs
   if (content instanceof Blob == false) return Promise.resolve(content);
 
-  return new Promise((resolve, reject) => {
+  return new Promise(function (resolve, reject) {
     var reader = new FileReader();
     reader.onloadend = function () {
       resolve(reader.result);

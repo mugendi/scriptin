@@ -17,7 +17,7 @@ function httpRequest(
   var xhr;
 
   // defaults options
-  let defaultOpts = { headers: {} };
+  var defaultOpts = { headers: {} };
 
   method = method.toUpperCase();
 
@@ -30,7 +30,7 @@ function httpRequest(
 
   var headers = {};
 
-  for (let k in opts.headers) {
+  for (var k in opts.headers) {
     headers[k.toLowerCase()] = opts.headers[k];
   }
 
@@ -73,17 +73,17 @@ function httpRequest(
     // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/getAllResponseHeaders
     if (this.readyState === this.HEADERS_RECEIVED) {
       // Get the raw header string
-      const headers = xhr.getAllResponseHeaders();
+      var headers = xhr.getAllResponseHeaders();
       // Convert the header string into an array
       // of individual headers
-      const arr = headers.trim().split(/[\r\n]+/);
+      var arr = headers.trim().split(/[\r\n]+/);
 
       // Create a map of header names to values
-      const headerMap = {};
+      var headerMap = {};
       arr.forEach(function (line) {
-        const parts = line.split(': ');
-        const header = parts.shift().toLowerCase();
-        const value = parts.join(': ');
+        var parts = line.split(': ');
+        var header = parts.shift().toLowerCase();
+        var value = parts.join(': ');
         headerMap[header] = value;
       });
 
@@ -137,7 +137,7 @@ function httpRequest(
   }
   //
 
-  for (let key in headers) {
+  for (var key in headers) {
     xhr.setRequestHeader(key, headers[key]);
   }
 
@@ -146,11 +146,13 @@ function httpRequest(
 
 class Ajax {
   constructor({ methods = ['get', 'post', 'head', 'put', 'post'] } = {}) {
-    for (let method of methods) {
-      this[method] = function (url, data, opts = {}) {
+    var self = this;
+
+    methods.forEach(function (method) {
+      self[method] = function (url, data, opts = {}) {
         return this.__fetch(url, method, data, opts);
       };
-    }
+    });
   }
 
   __fetch(url, method, data, opts) {

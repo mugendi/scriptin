@@ -45,7 +45,7 @@ var Scriptin = {
       // console.log(s);
 
       loadScript(s, options)
-        .then((resp) => {
+        .then(function (resp) {
           if (resp.status == "ok") {
             events.emit("loaded", resp.script);
             events.emit(resp.script.url, resp.script);
@@ -99,7 +99,7 @@ document.onkeydown = function KeyPress(e) {
   KeyPress.intVar = KeyPress.intVar;
 
   clearTimeout(KeyPress.intVar);
-  KeyPress.intVar = setTimeout(() => {
+  KeyPress.intVar = setTimeout(function () {
     KeyPress.keys = [];
   }, 1000);
 

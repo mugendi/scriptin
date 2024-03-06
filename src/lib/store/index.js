@@ -25,7 +25,7 @@ function initStore() {
     }
 
     // wait for store to be ready
-    let intVar = setInterval(function () {
+    var intVar = setInterval(function () {
       if (store) {
         clearInterval(intVar);
         return resolve(store);
