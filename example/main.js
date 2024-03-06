@@ -17,6 +17,7 @@ let loader = Scriptin.load(
     },
     'http://ip-api.com/json/24.48.0.1',
     'test.js',
+    'test2.js',
     {
       // url: 'https://cdn.pixabay.com/download/audio/2023/11/25/audio_f469d11302.mp3?filename=carol-of-the-bells-xmas-background-hip-hop-music-for-video-30-second-178241.mp3',
       url:'https://cdn.pixabay.com/download/audio/2024/02/14/audio_b9bc3934cc.mp3?filename=perfect-beauty-191271.mp3',
@@ -33,8 +34,10 @@ let loader = Scriptin.load(
   { ttl: 0, injectToHead: true, debug: true }
 );
 
-Scriptin.on('error', (data) => {
-  console.error(data);
+
+
+Scriptin.on('test.js', (data) => {
+  console.log(data);
 });
 
 Scriptin.on('audio', (data) => {
@@ -52,15 +55,15 @@ Scriptin.on(['image'], (data) => {
 
 let { store } = Scriptin;
 
-store
-  .set('test', { num: Math.random() * 1000, date: new Date() , b:'one'})
-  .then((resp) => {
-    return store.get('test');
-  })
-  .then((resp) => {
-    console.log(resp);
-  })
-  .catch(console.error);
+// store
+//   .set('test', { num: Math.random() * 1000, date: new Date() , b:'one'})
+//   .then((resp) => {
+//     return store.get('test');
+//   })
+//   .then((resp) => {
+//     console.log(resp);
+//   })
+//   .catch(console.error);
 
 /* */
 
