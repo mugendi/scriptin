@@ -5,6 +5,4 @@
  * https://opensource.org/licenses/MIT
  */
 
-console.log(' 1, 2, 3, 4');
-
-// throw "sffsfs"
+console.log('test2 and oopsy! hgsg');
