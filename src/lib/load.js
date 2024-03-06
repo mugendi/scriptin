@@ -8,7 +8,11 @@
 'use strict';
 
 import ajax from './ajax.js';
-import { checkHeaderExpiry, getHeaderType, toDataURI } from './utils.js';
+import {
+  checkHeaderExpiry,
+  getHeaderType,
+  toDataURI,
+} from './utils.js';
 import { storeGet, storeSet, del } from './store/index.js';
 import { addSeconds, isBefore } from 'date-fns';
 
@@ -16,6 +20,7 @@ export function loadScript(script, options = {}) {
   // console.log({options});
   var now = new Date();
   var TTL = null;
+  let self = this;
 
   // set TTL
   if (typeof options.ttl == 'number' && options.ttl > 0) {
@@ -133,7 +138,17 @@ export function loadScript(script, options = {}) {
       // Finally, if from cache, check that file has not changed
       if (script.fromCache) {
         // console.log(JSON.stringify(script, 0, 4));
-        checkScriptExpiry(script).catch(console.error);
+        checkScriptExpiry(script)
+          .then((hasReload) => {
+            // if has reload
+            if (hasReload) {
+              options.debug &&
+                console.log(script.url + ' changed. Will reload browser...');
+              // mark that we need to reload browser
+              self.reloadBrowser = true;
+            }
+          })
+          .catch(console.error);
       }
 
       return { status: 'ok', script: script };
@@ -186,17 +201,12 @@ function checkScriptExpiry(script) {
 
     // console.log(script.url, JSON.stringify(scriptExpiry, 0, 4));
     if (scriptExpiry.isExpired) {
-      console.log(script.url, ' changed. Reloading...');
       // delete script cache
-      del(script.url)
-        .then(function (resp) {
-          //   console.log('Purged', script.url);
-          setTimeout(function () {
-            window.location.reload();
-          }, 0);
-        })
-        .catch(console.error);
+      del(script.url);
+      return true;
     }
+
+    return false;
   });
   //
 }

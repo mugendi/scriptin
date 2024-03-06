@@ -37,6 +37,10 @@ export function checkHeaderExpiry(script, ajaxResp) {
   // If script has a date element
   var date;
 
+  if (lastModified) {
+    lastModified = new Date(lastModified);
+  }
+
   // set date if last-modified header
   if (script.date) {
     date = script.date;
@@ -92,3 +96,4 @@ export function toDataURI(content) {
     reader.readAsDataURL(content);
   });
 }
+

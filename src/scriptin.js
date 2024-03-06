@@ -17,8 +17,10 @@ var events = new Eev();
 
 var Scriptin = {
   __contentObj: {},
+  reloadBrowser: false,
   events: events,
   load: function (scripts, options = {}) {
+    let self = this;
     this.options = options;
 
     //
@@ -31,6 +33,7 @@ var Scriptin = {
     scripts = arrify(scripts);
     // filter those with none true tests
     var s;
+    var promises = [];
 
     for (var i in scripts) {
       s = scripts[i];
@@ -44,8 +47,10 @@ var Scriptin = {
 
       // console.log(s);
 
-      loadScript(s, options)
+      let p = loadScript
+        .bind(this)(s, options)
         .then(function (resp) {
+          // console.log(resp);
           if (resp.status == "ok") {
             events.emit("loaded", resp.script);
             events.emit(resp.script.url, resp.script);
@@ -61,7 +66,20 @@ var Scriptin = {
         .catch(function (error) {
           console.log(error);
         });
+
+      promises.push(p);
     }
+
+    // when all is done
+    Promise.allSettled(promises)
+      .then((resp) => {
+        // see if we need to reload browser
+        if (self.reloadBrowser) {
+          options.debug && console.log("Reloading browser");
+          window.location.reload();
+        }
+      })
+      .catch(console.error);
   },
 
   on(evs, fn) {
@@ -95,6 +113,8 @@ if (window && !!window.open) {
 
 // catch cntrl + R
 document.onkeydown = function KeyPress(e) {
+  // console.log(e);
+
   KeyPress.keys = KeyPress.keys || [];
   KeyPress.intVar = KeyPress.intVar;
 
@@ -107,13 +127,18 @@ document.onkeydown = function KeyPress(e) {
     KeyPress.keys.push("CTRL");
   }
 
-  if (e.code === "F5" && KeyPress.keys.indexOf("F5") == -1) {
-    KeyPress.keys.push("F5");
+  if (e.code) {
+    KeyPress.keys.push(e.code);
   }
 
-  if (KeyPress.keys.indexOf("F5") > -1 && KeyPress.keys.indexOf("CTRL") > -1) {
-    clear();
+  // console.log(KeyPress.keys );
+  if (
+    KeyPress.keys.indexOf("KeyR") > -1 &&
+    KeyPress.keys.indexOf("CTRL") > -1
+  ) {
+    e.preventDefault();
+    clear().then(function () {
+      window.location.reload();
+    });
   }
-
-  return null;
 };
