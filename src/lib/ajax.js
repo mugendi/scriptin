@@ -130,6 +130,13 @@ function httpRequest(
 
   xhr.open(method, url, true);
 
+  // console.log('TTT', url, opts);
+
+  if (opts.responseType) {
+    xhr.responseType = opts.responseType;
+  }
+  //
+
   for (let key in headers) {
     xhr.setRequestHeader(key, headers[key]);
   }
@@ -155,8 +162,9 @@ class Ajax {
         data,
         opts,
         function (xhr) {
+          // console.log(">>>>", xhr.response==xhr.responseText);
           // console.log(xhr);
-          resolve({ data: xhr.responseText, headers: xhr.headers });
+          resolve({ data: xhr.response, headers: xhr.headers });
         },
         reject
       );

@@ -1,6 +1,6 @@
 {
   "name": "scriptin",
-  "version": "1.1.5",
+  "version": "2.0.0",
   "description": "Javascript and CSS loaded that uses localforage to cache scripts on browser for super-fast loads.",
   "main": "src/scriptin.js",
   "type": "module",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "build:dev": "webpack watch --config webpack.config.js",
+    "build:dev": "nodemon -w webpack.config.js --exec 'webpack watch --config webpack.config.js'",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -26,6 +26,7 @@
   "devDependencies": {
     "compression-webpack-plugin": "^10.0.0",
     "cross-env": "^7.0.3",
+    "deepmerge": "^4.3.1",
     "husky": "^8.0.0",
     "prettier": "^3.2.4",
     "terser-webpack-plugin": "^5.3.9",
@@ -33,6 +34,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "date-fns": "^3.3.1",
     "store": "^2.0.12"
   }
 }
