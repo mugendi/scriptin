@@ -5,6 +5,3 @@
  * https://opensource.org/licenses/MIT
  */
 
-console.log(' 1, 2, 3, 4, 5');
-
-// throw "sffsfs"

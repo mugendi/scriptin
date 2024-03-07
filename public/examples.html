@@ -1,0 +1,50 @@
+<!--
+ Copyright (c) 2024 Anthony Mugendi
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Examples</title>
+    <style>
+        #log{
+            background: #333;
+            color: aliceblue;
+            padding:20px;
+        }
+        #tests{
+            padding: 20px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        h2{
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+  <body>
+    <h2>Examples</h2>
+
+    <div id="tests">
+        <h2>Tests</h2>
+        <button id="store">Store</button>
+        <button id="ajax">Ajax</button>
+        <button id="events">Events</button>
+    </div>
+    <pre id="log">
+
+    </pre>
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  <script src="scriptin.js"></script>
+  <script src="examples/init.js"></script>
+  <script src="examples/logger.js"></script>
+  <script src="examples/store.js"></script>
+  <script src="examples/ajax.js"></script>
+  <script src="examples/events.js"></script>
+</html>

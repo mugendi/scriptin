@@ -5,4 +5,4 @@
  * https://opensource.org/licenses/MIT
  */
 
-console.log('breaking changes');
+console.log('test script 2. Is injected! whats? soon');
