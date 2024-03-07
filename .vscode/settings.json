@@ -7,9 +7,5 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true
     },
-    "hide-files.files": [],
-    "cSpell.words": [
-        "MSXML",
-        "Scriptin"
-    ]
+    "hide-files.files": []
 }
