@@ -36,6 +36,7 @@ export function injectScript(script) {
     document.querySelector('body') ||
     document.querySelector('html');
 
+
   if (script.content.type == 'javascript') {
     tagEl = document.createElement('script');
     tagEl.setAttribute('type', 'text/javascript');
@@ -58,12 +59,23 @@ export function injectScript(script) {
   return tagEl;
 }
 
-
 export function hash(s) {
   s = String(s);
   var h = 0,
     l = s.length,
     i = 0;
   if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0;
-  return 'h'+ String(h).replace('-','Z');
+  return 'h' + String(h).replace('-', 'Z');
+}
+
+export function merge(target, source) {
+  // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
+  for (const key of Object.keys(source)) {
+    if (source[key] instanceof Object)
+      Object.assign(source[key], merge(target[key] || {}, source[key]));
+  }
+
+  // Join `target` and modified `source`
+  Object.assign(target || {}, source);
+  return target;
 }

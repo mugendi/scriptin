@@ -6,7 +6,7 @@
  */
 
 
-let scriptin = new Scriptin({ ttl: 0, injectToHead: true, debug: true });
+let scriptin = new ScriptIn({ ttl: 0, injectToHead: true, debug: true });
 
  scriptin.load(
   [
@@ -17,7 +17,7 @@ let scriptin = new Scriptin({ ttl: 0, injectToHead: true, debug: true });
     },
     'http://ip-api.com/json/24.48.0.1',
     'js/test.js#54484',
-    'js/test2.js',
+    // 'js/test2.js',
     {
       // url: 'https://cdn.pixabay.com/download/audio/2023/11/25/audio_f469d11302.mp3?filename=carol-of-the-bells-xmas-background-hip-hop-music-for-video-30-second-178241.mp3',
       url:'https://cdn.pixabay.com/download/audio/2024/02/14/audio_b9bc3934cc.mp3?filename=perfect-beauty-191271.mp3',
@@ -29,6 +29,7 @@ let scriptin = new Scriptin({ ttl: 0, injectToHead: true, debug: true });
       url: 'https://cdn.pixabay.com/photo/2023/04/11/13/27/bird-7917250_1280.jpg',
       returnType: 'dataURI',
       cache: true,
+      ttl:10
     },
   ]
 );

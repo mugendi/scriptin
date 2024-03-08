@@ -1,40 +1,34 @@
-
 export default class DbStorage {
   constructor(options) {
     this.name = options.name;
   }
 
-  getItem(key) {
-    return this.__getStore().then((store) => {
-      return awaitRequest(store.get(key), 'Failed to get item');
-    });
+  async getItem(key) {
+    var store = await this.__getStore();
+    return awaitRequest(store.get(key), 'Failed to get item');
   }
 
-  setItem(key, value) {
-    return this.__getStore().then((store) => {
-      return awaitRequest(store.put(value, key), 'Failed to set item');
-    });
+  async setItem(key, value) {
+    var store = await this.__getStore();
+    return awaitRequest(store.put(value, key), 'Failed to set item');
   }
 
-  removeItem(key) {
-    return this.__getStore().then((store) => {
-      return awaitRequest(store.delete(key), 'Failed to remove item');
-    });
+  async removeItem(key) {
+    var store = await this.__getStore();
+    return awaitRequest(store.delete(key), 'Failed to remove item');
   }
 
-  clear() {
-    return this.__getStore().then((store) => {
-      return awaitRequest(store.clear(), 'Failed to clear store');
-    });
+  async clear() {
+    var store = await this.__getStore();
+    return awaitRequest(store.clear(), 'Failed to clear store');
   }
 
-  __getStore() {
-    return this.__getOrCreateDb().then((db) => {
-      return db.transaction('store', 'readwrite').objectStore('store');
-    });
+  async __getStore() {
+    var db = await this.__initDb();
+    return db.transaction('store', 'readwrite').objectStore('store');
   }
 
-  __getOrCreateDb() {
+  __initDb() {
     if (this.db === undefined) {
       this.db = this.__openDb();
     }
@@ -54,7 +48,6 @@ export default class DbStorage {
     return awaitRequest(request, 'Failed to open IndexedDB');
   }
 }
-
 
 function awaitRequest(request, errorMessage) {
   return new Promise(function (resolve, reject) {

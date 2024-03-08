@@ -12,7 +12,7 @@ export function getHeaderType(headers) {
   var contentType = (headers['content-type'] || '').toLowerCase();
   var arr = contentType.split(';')[0].split('/');
 
-  return { category: arr[0], type: arr[1] || arr[0] };
+  return { category: arr[0] || "?", type: arr[1] || arr[0] || "?" };
 }
 
 export function hasExpiredHeader(headers, dateFetched) {
