@@ -21,6 +21,7 @@ export default (function () {
     }
   
     LinkedList.prototype = {
+
       insert: function (data) {
         var link = new RunnableLink(this.tail.prev, this.tail, data);
         link.next.prev = link.prev.next = link;
@@ -55,8 +56,11 @@ export default (function () {
     Eev.prototype = {
       constructor: Eev,
   
-      on: function (names, fn) {
+      on: function (names, fn, ctx) {
         var me = this;
+
+        fn = fn.bind(ctx||null);
+        // console.log('ctx', ctx);
   
         names.split(splitter).forEach(function (name) {
           var list = me.events[name] || (me.events[name] = new LinkedList());

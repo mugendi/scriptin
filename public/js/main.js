@@ -8,6 +8,7 @@
 
 let scriptin = new ScriptIn({ ttl: 0, injectToHead: true, debug: true });
 
+/*
  scriptin.load(
   [
     {
@@ -32,25 +33,28 @@ let scriptin = new ScriptIn({ ttl: 0, injectToHead: true, debug: true });
       ttl:10
     },
   ]
-);
+)
+*/
 
-scriptin.on('error', (data) => {
-  console.error(data);
-});
+scriptin.plugins(['AutoResource', 'IsLoading'])
 
-scriptin.on('javascript', (data) => {
-  console.log(data.meta.cache);
-});
+// scriptin.on('error', (data) => {
+//   console.error(data);
+// });
 
-scriptin.on('audio', (data) => {
-  let audio = document.createElement('audio');
-  audio.controls = true;
-  audio.src = data.content.data;
-  document.body.appendChild(audio);
-});
+// scriptin.on('javascript', (data) => {
+//   console.log(data.meta.cache);
+// });
 
-scriptin.on(['image'], (data) => {
-  let img = document.createElement('img');
-  img.src = data.content.data;
-  document.body.appendChild(img);
-});
+// scriptin.on('audio', (data) => {
+//   let audio = document.createElement('audio');
+//   audio.controls = true;
+//   audio.src = data.content.data;
+//   document.body.appendChild(audio);
+// });
+
+// scriptin.on(['image'], (data) => {
+//   let img = document.createElement('img');
+//   img.src = data.content.data;
+//   document.body.appendChild(img);
+// });

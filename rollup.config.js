@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import { inspect, promisify } from 'util';
+import {  promisify } from 'util';
 import { brotliCompress } from 'zlib';
 import { terser } from 'rollup-plugin-terser';
 // Using a modified version that adds the last-modified header...
@@ -15,12 +15,14 @@ import sizes from 'rollup-plugin-sizes';
 import filesize from 'rollup-plugin-filesize';
 import gzipPlugin from 'rollup-plugin-gzip';
 import { babel } from '@rollup/plugin-babel';
+import clean from '@rollup-extras/plugin-clean';
+import css from "rollup-plugin-import-css";
 
 import { readdirSync } from 'fs';
 import path from 'path';
 
 import { fileURLToPath } from 'url';
-import { merge } from './src/lib/utils/general.js';
+import merge from 'lodash.merge';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -36,6 +38,10 @@ const defaultConfig = {
     sourcemap: true,
   },
   plugins: [
+    clean(),
+
+    css(),
+     
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
@@ -91,7 +97,7 @@ const defaultConfig = {
   ],
 };
 
-let confs = [
+let configs = [
   merge(
     {
       input: {
@@ -105,17 +111,20 @@ let confs = [
   ),
 ];
 
+
 // get all plugins...
 const plugins = readdirSync('./src/plugins');
-const pluginsConf = plugins.map((name) => {
+const pluginsConf = plugins.map((fileName) => {
+  let name =  fileName.replace(/\.js$/, '');
+
   return merge(
     {
       input: {
-        ['plugins/' + name.replace(/\.js$/, '')]: 'src/plugins/' + name,
+        ['plugins/' + name]: 'src/plugins/' + fileName,
       },
       output: {
-        format: 'cjs',
-        
+        format: 'iife',
+        name:'ScriptIn' + name,
       },
     },
     defaultConfig
@@ -124,4 +133,4 @@ const pluginsConf = plugins.map((name) => {
 
 
 // export default [defaultConf].concat(pluginsConf);
-export default confs.concat(pluginsConf);
+export default configs.concat(pluginsConf);

@@ -79,3 +79,33 @@ export function merge(target, source) {
   Object.assign(target || {}, source);
   return target;
 }
+
+
+export function getHost() {
+  // obtain plugin path from the script element
+  var src;
+  var path = '/scriptin.js';
+
+  if (document.currentScript) {
+    src = document.currentScript.src;
+  } else {
+    var sel = document.querySelector('script[src$="'+path+'"]')
+    if (sel) {
+      src = sel.src;
+    }
+  }
+
+
+  return src.replace(path,'');
+}
+
+
+export function isClass(val) {
+  if(!val) return false
+  const propertyNames = Object.getOwnPropertyNames(val);
+  return propertyNames.includes('prototype') && !propertyNames.includes('arguments');
+}
+
+export function isFunction(val) {
+  return typeof val === 'function' && !isClass(val);
+}

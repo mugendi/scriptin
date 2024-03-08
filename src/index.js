@@ -14,8 +14,10 @@ import { addSeconds, isBefore } from "./lib/utils/dateFns.js";
 import { getHeaderType, hasExpiredHeader } from "./lib/utils/headers.js";
 import {
   arrify,
+  getHost,
   hash,
   injectScript,
+  isClass,
   merge,
   toDataURI,
 } from "./lib/utils/general.js";
@@ -28,8 +30,12 @@ import {
 var Y = "✓";
 var N = "✖";
 
+const scriptHost = getHost();
+
 class Scriptin {
   constructor(options = {}) {
+    this.scriptHost = scriptHost;
+
     this.options = merge(
       { ttl: 0, injectToHead: true, debug: false, ignoreURLParams: true },
       options,
@@ -38,6 +44,8 @@ class Scriptin {
     this.events = new Eev();
     this.ajax = ajax;
     this.store = new Store();
+
+    this.Scriptin = this;
 
     this.__listener();
   }
@@ -106,6 +114,36 @@ class Scriptin {
     }
   }
 
+  async plugins(pluginNames) {
+    let self = this;
+    try {
+      pluginNames = arrify(pluginNames);
+
+      // load
+      self.events.on("loaded", function (script) {
+        var name = script.url.split("/").pop().replace(/\.js$/, "");
+
+        if (pluginNames.indexOf(name) > -1) {
+          var cName = "ScriptIn" + name;
+          var cls = window[cName];
+          if (isClass(cls)) {
+            // pass all methods of Scriptin class
+            new cls(self);
+          }
+        }
+      });
+
+      for (var i in pluginNames) {
+        var url = this.scriptHost + "/plugins/" + pluginNames[i] + ".js";
+        this.load(url);
+      }
+
+      // await
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async __loadScript(script) {
     var self = this;
     var now = new Date();
@@ -135,6 +173,9 @@ class Scriptin {
         // But there are conditions which would make us reject this cache status. These are
         // 1.ttl has not changed
         cacheStatusDirty = script.ttl !== cachedScript.ttl;
+
+        // 2. script.returnType has changed
+        cacheStatusDirty = script.returnType !== cachedScript.returnType;
 
         if (!cacheStatusDirty) {
           // set cache status to Y
@@ -270,7 +311,6 @@ class Scriptin {
 
   async __fetchScript(script) {
     // ajax fetch
-    // console.log(script);
 
     this.__log("fetching ", script.url);
     // 1. if returnType == 'dataURI' then we want to set  responseType = 'blob';
