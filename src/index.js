@@ -17,6 +17,7 @@ import {
   getHost,
   hash,
   injectScript,
+  isAbsoluteURL,
   isClass,
   merge,
   toDataURI,
@@ -57,7 +58,7 @@ class Scriptin {
     }
   }
 
-  async load(scripts) {
+  async load(scripts, options) {
     try {
       var self = this;
       // console.log(12, { scripts });
@@ -90,8 +91,16 @@ class Scriptin {
 
         // 3. Now load script
         var loadedScript = await this.__loadScript(script);
+
         if (loadedScript) {
-          self.events.emit("loaded", loadedScript);
+          var event = options?.event || "loaded";
+          var parent = options?.parent;
+          var extra = options?.extra || {};
+
+          loadedScript.parent = parent;
+          loadedScript.extra = extra;
+
+          self.events.emit(event, loadedScript);
           self.events.emit(loadedScript.url, loadedScript);
           self.events.emit(loadedScript.content.type, loadedScript);
           self.events.emit(loadedScript.content.category, loadedScript);
@@ -100,7 +109,8 @@ class Scriptin {
     } catch (error) {
       // Handle all errors
 
-      if (self.options.debug) console.error({ error });
+      if (self?.options?.debug) console.error({ error });
+
       var stack = error.stack || /*old opera*/ error.stacktrace;
       var errObj = {
         error: {
@@ -114,33 +124,76 @@ class Scriptin {
     }
   }
 
-  async plugins(pluginNames) {
+  async plugins(plugins) {
     var self = this;
     try {
-      pluginNames = arrify(pluginNames);
+      plugins = arrify(plugins);
 
       // load
-      self.events.on("loaded", function (script) {
+      self.events.on("plugin-loaded", async function (script) {
         var name = script.url.split("/").pop().replace(/\.js$/, "");
+        // console.log('loaded', script.url, name);
 
-        if (pluginNames.indexOf(name) > -1) {
-          var cName = "ScriptIn" + name;
-          var cls = window[cName];
-          if (isClass(cls)) {
-            // pass all methods of Scriptin class
-            new cls(self);
+        var cName = "ScriptIn" + name;
+        var cls = window[cName];
+        var parent = script.parent;
+        var pluginOptions = script.extra;
+
+        // console.log({parent});
+
+        if (isClass(cls)) {
+          // pass all methods of Scriptin class
+
+          let plugin = new cls(
+            merge(self, { pluginName: name, parent, pluginOptions }),
+          );
+
+          if (plugin.dependencies) {
+            var deps = arrify(plugin.dependencies);
+            // load plugin deps
+            await self.__loadPlugins(deps, name);
           }
+
+          // console.log(plugin);
+          // plugin.name = 'sssss'
+          // plugin.__prototype.pluginName = name;
+          // init
+          plugin.init && plugin.init();
         }
       });
 
-      for (var i in pluginNames) {
-        var url = this.scriptHost + "/plugins/" + pluginNames[i] + ".js";
-        this.load(url);
-      }
+      // load plugins
+      this.__loadPlugins(plugins);
 
       // await
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  async __loadPlugins(plugins, parent) {
+    var plugin;
+    var extra = {};
+
+    //
+    for (var i in plugins) {
+      plugin = plugins[i];
+
+      if (Array.isArray(plugin)) {
+        extra = plugin[1];
+        plugin = plugin[0];
+      }
+
+      var url;
+
+      // load plugin from absolute link too
+      if (isAbsoluteURL(plugins[i])) {
+        url = plugins[i];
+      } else {
+        url = this.scriptHost + "/plugins/" + plugin + ".js";
+      }
+
+      await this.load(url, { event: "plugin-loaded", parent, extra });
     }
   }
 
@@ -218,8 +271,12 @@ class Scriptin {
       // Cache script if script cache is enabled
       var resp = await self.__fetchScript(script);
 
+      var contentLength = parseFloat(resp.headers["content-length"]) || null;
+
+      // console.log(JSON.stringify(resp.headers,0,4));
       script.content = resp.content;
       script.meta.fetched = now;
+      script.meta.size = contentLength;
 
       // if script can be cached, then cache
       if (script.meta.cache.enabled == Y) {

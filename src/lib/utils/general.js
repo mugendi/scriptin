@@ -109,3 +109,7 @@ export function isClass(val) {
 export function isFunction(val) {
   return typeof val === 'function' && !isClass(val);
 }
+
+export function isAbsoluteURL(url){
+  return /^(?:[a-z+]+:)?\/\//.test(url)
+}

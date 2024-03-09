@@ -19,9 +19,33 @@ let options = {
         'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
       },
     },
+    Display: {
+      styles: {
+        // h4: {
+        //   fontSize: '12px',
+        // },
+      },
+    },
   },
 };
 let scriptin = new ScriptIn(options);
+
+scriptin.plugins([
+  [
+    'Details',
+    {
+      showHeaders: true,
+      filter: ['meta.type'],
+    },
+  ],
+  'http://localhost:5000/plugins/IsLoading.js',
+  'AutoResource',
+  // 'Details'
+]);
+
+scriptin.on('loaded', (data) => {
+  // console.log('loaded', data.url);
+});
 
 /*
  scriptin.load(
@@ -51,14 +75,8 @@ let scriptin = new ScriptIn(options);
 )
 */
 
-scriptin.plugins(['IsLoading', 'AutoResource']);
-
 // scriptin.on('error', (data) => {
 //   console.error(data);
-// });
-
-// scriptin.on('javascript', (data) => {
-//   console.log(data.meta.cache);
 // });
 
 // scriptin.on('audio', (data) => {

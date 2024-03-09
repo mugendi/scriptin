@@ -117,7 +117,7 @@ const plugins = readdirSync('./src/plugins');
 const pluginsConf = plugins.map((fileName) => {
   let name =  fileName.replace(/\.js$/, '');
 
-  return merge(
+  let config =  merge(
     {
       input: {
         ['plugins/' + name]: 'src/plugins/' + fileName,
@@ -129,6 +129,12 @@ const pluginsConf = plugins.map((fileName) => {
     },
     defaultConfig
   );
+
+  // config.external.push(/style-object-to-css-string/)
+
+  // console.log(config);
+
+  return config;
 });
 
 

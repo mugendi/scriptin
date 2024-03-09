@@ -9,8 +9,7 @@ export default class Plugin {
   constructor(ctx) {
     // inherit Scriptin (this.Scriptin) context which we will need
     Object.assign(this, ctx);
-    // initialize
-    this.init();
+
   }
 
   init() {

@@ -15,8 +15,6 @@ export default class Plugin {
     ctx.showLoader = this.showLoader.bind(this);
     ctx.hideLoader = this.hideLoader.bind(this);
 
-    // initialize
-    this.init();
   }
 
   init() {

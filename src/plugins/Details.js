@@ -60,7 +60,6 @@ export default class Plugin {
       showHeaders = true;
     }
 
-    console.log(filter);
 
     // Listen for load event
     this.Scriptin.events.on(
