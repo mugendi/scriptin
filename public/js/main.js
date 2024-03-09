@@ -13,7 +13,10 @@ let options = {
   plugins: {
     IsLoading: {
       styles: {
-        background: '#555',
+        background: '#f1f1f1',
+        border: '#ddd 1px solid',
+        'border-radius': '20px',
+        'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
       },
     },
   },

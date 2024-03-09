@@ -21,8 +21,8 @@ export default class Plugin {
 
   init() {
     // Inject loading css to head
-    let head = document.head || document.body;
-    let style = document.createElement('style');
+    var head = document.head || document.body;
+    var style = document.createElement('style');
     style.textContent = css;
     head.appendChild(style);
   }
@@ -51,9 +51,8 @@ export default class Plugin {
   }
 
   copyStyles(el, loaderDiv) {
-
-    const styles = window.getComputedStyle(el);
-    let cssText;
+    var styles = window.getComputedStyle(el);
+    var cssText;
 
     if (styles.cssText !== '') {
       loaderDiv.style.cssText = styles.cssText;
@@ -63,16 +62,17 @@ export default class Plugin {
           `${css}${propertyName}:${styles.getPropertyValue(propertyName)};`
       );
 
-      let background =
-        this.options?.plugins?.IsLoading?.styles?.background ||
-        'rgba(75, 11, 194,.9)';
-
-
       cssText =
         cssText +
-        'min-width: 64px; min-height: 32px;  display: inline-block; margin: 2.5px;  background: ' +
-        background +
-        ';';
+        'min-width: 64px; min-height: 32px;  display: inline-block; margin: 2.5px;';
+
+      // apply custom styles
+      var customStyles = this.options?.plugins?.IsLoading?.styles || {};
+      if (typeof customStyles == 'object') {
+        for (var n in customStyles) {
+          cssText = cssText + n + ':' + customStyles[n] + ';';
+        }
+      }
 
       loaderDiv.style.cssText = cssText;
     }

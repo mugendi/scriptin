@@ -24,7 +24,7 @@ export default class Plugin {
 
     // loop through and handle each element
     for (var i in els) {
-      let el = els[i];
+      var el = els[i];
       try {
         this.loadElement(el);
       } catch (error) {

@@ -70,7 +70,7 @@ export function hash(s) {
 
 export function merge(target, source) {
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-  for (const key of Object.keys(source)) {
+  for (var key of Object.keys(source)) {
     if (source[key] instanceof Object)
       Object.assign(source[key], merge(target[key] || {}, source[key]));
   }
@@ -102,7 +102,7 @@ export function getHost() {
 
 export function isClass(val) {
   if(!val) return false
-  const propertyNames = Object.getOwnPropertyNames(val);
+  var propertyNames = Object.getOwnPropertyNames(val);
   return propertyNames.includes('prototype') && !propertyNames.includes('arguments');
 }
 

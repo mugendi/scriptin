@@ -30,7 +30,7 @@ import {
 var Y = "✓";
 var N = "✖";
 
-const scriptHost = getHost();
+var scriptHost = getHost();
 
 class Scriptin {
   constructor(options = {}) {
@@ -115,7 +115,7 @@ class Scriptin {
   }
 
   async plugins(pluginNames) {
-    let self = this;
+    var self = this;
     try {
       pluginNames = arrify(pluginNames);
 
@@ -240,7 +240,7 @@ class Scriptin {
   }
 
   __listener() {
-    let self = this;
+    var self = this;
 
     // listen for cntrl + R
     document.onkeydown = async function KeyPress(e) {
@@ -289,7 +289,7 @@ class Scriptin {
     var self = this;
     // console.log(JSON.stringify(script, 0, 4));
     // 1. Make head request
-    let resp = await ajax.head(script.url);
+    var resp = await ajax.head(script.url);
     var hasExpired = hasExpiredHeader(resp.headers, script.meta.fetched);
 
     if (hasExpired) {
