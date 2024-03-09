@@ -5,8 +5,20 @@
  * https://opensource.org/licenses/MIT
  */
 
+let options = {
+  ttl: 0,
+  injectToHead: true,
+  debug: true,
 
-let scriptin = new ScriptIn({ ttl: 0, injectToHead: true, debug: true });
+  plugins: {
+    IsLoading: {
+      styles: {
+        background: '#555',
+      },
+    },
+  },
+};
+let scriptin = new ScriptIn(options);
 
 /*
  scriptin.load(
@@ -36,7 +48,7 @@ let scriptin = new ScriptIn({ ttl: 0, injectToHead: true, debug: true });
 )
 */
 
-scriptin.plugins(['AutoResource', 'IsLoading'])
+scriptin.plugins(['IsLoading', 'AutoResource']);
 
 // scriptin.on('error', (data) => {
 //   console.error(data);

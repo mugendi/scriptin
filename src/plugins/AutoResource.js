@@ -34,6 +34,7 @@ export default class Plugin {
   }
 
   loadElement(el) {
+    var self = this;
     // only supported tags
     // if not, an error is thrown
     this.isSupportedTag(el);
@@ -55,7 +56,7 @@ export default class Plugin {
     script.returnType = script.returnType || 'dataURI';
 
     // only deal with dataURI's
-    if (script.returnType !== 'dataURI' ) {
+    if (script.returnType !== 'dataURI') {
       throw (
         'Remove [data-return-type] or set it to "dataURI" from: ' +
         this.printEl(el)
@@ -66,19 +67,28 @@ export default class Plugin {
     this.Scriptin.events.on(
       url,
       function (script) {
+        // log
+        // self.Scriptin.__log( el.dataset.scriptin, 'Ready');
         if (script.content.data instanceof Blob) {
-          console.log(script.content.data);
+          self.options.debug && console.error('Unexpected Blob Data Format. ');
         } else {
           this.el.setAttribute('src', script.content.data);
           el.classList.remove('scriptin-loading');
+
+          if (self.hideLoader && typeof self.hideLoader == 'function') {
+            self.hideLoader(el);
+          }
         }
       },
       { el }
     );
 
-   
     // show loading
     el.classList.add('scriptin-loading');
+    // if the showLoaderMethod is available
+    if (this.showLoader && typeof this.showLoader == 'function') {
+      this.showLoader(el);
+    }
 
     // load script
     this.Scriptin.load(script);

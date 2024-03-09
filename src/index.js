@@ -179,13 +179,11 @@ class Scriptin {
 
         if (!cacheStatusDirty) {
           // set cache status to Y
-          cachedScript.meta.cache.status = Y;
-          script = merge(script, cachedScript);
+          script.meta.cache.status = Y;
+          script = merge(cachedScript, script);
         }
       }
     }
-
-    // console.log(script);
 
     // if script is cached....
     if (script.meta.cache.status == Y) {
