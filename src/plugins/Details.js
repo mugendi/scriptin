@@ -15,19 +15,19 @@ export default class Plugin {
     Object.assign(this, ctx);
 
     this.dependencies = ['__styler', 'AutoResource'];
-    this.pluginOptions = this.options?.plugins?.Details||{}
+    this.pluginOptions = this.options?.plugins?.Details || {};
+
   }
 
   init() {
     // Inject styles
-    this.Scriptin.injectStyles(css);
+    this.Scriptin.injectStyles && this.Scriptin.injectStyles(css);
 
     // addDetails
     this.addDetails();
   }
 
   makeFilter() {
-
     var filter = this.pluginOptions.filter || null;
 
     // must be an array
@@ -64,6 +64,8 @@ export default class Plugin {
       showHeaders = true;
     }
 
+    console.log(filter);
+
     // Listen for load event
     this.Scriptin.events.on(
       'loaded',
@@ -73,6 +75,7 @@ export default class Plugin {
           var el = document.querySelector(
             '[data-scriptin="' + script.url + '"]'
           );
+
           if (!el) return;
 
           var containerEl = document.createElement('div');
@@ -120,8 +123,8 @@ export default class Plugin {
               if (filter?.indexOf(key) == -1 && filter?.indexOf(i + '.*') == -1)
                 continue;
 
-              if(key=='meta.size'){
-                details[i][j] = prettyBytes( details[i][j] )
+              if (key == 'meta.size') {
+                details[i][j] = prettyBytes(details[i][j]);
               }
 
               html =
@@ -139,10 +142,10 @@ export default class Plugin {
             html = html + '</ul>';
 
             groupEl.innerHTML = html;
-
             containerEl.appendChild(groupEl);
           }
 
+          
           //   console.log(JSON.stringify(details, 0, 4));
           el.after(containerEl);
         }

@@ -19,16 +19,19 @@ let options = {
     //     'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
     //   },
     // },
-    // Details: {
-    //   showHeaders: true,
-    //   filter: ['meta', 'cache'],
-    //   styles: {
-    //     '.scriptin-details h4': {
-    //       color: 'red',
-    //     },
-    //   },
-    // },
-    AutoResource:{}
+    Details: {
+      showHeaders: true,
+      filter: ['meta', 'cache'],
+      styles: {
+        '.scriptin-details h4': {
+          color: 'red',
+        },
+      },
+    },
+    //  Details:{},
+    // AutoResource:{},
+    // Details:{},
+   
   },
 };
 let scriptin = new ScriptIn(options);

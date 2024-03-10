@@ -11,9 +11,8 @@ export default class Plugin {
     Object.assign(this, ctx);
 
     this.dependencies = ['IsLoading'];
-
   }
-  
+
   init() {
     // load resources
     this.loadResources();
@@ -26,6 +25,7 @@ export default class Plugin {
     // loop through and handle each element
     for (var i in els) {
       var el = els[i];
+
       try {
         this.loadElement(el);
       } catch (error) {
@@ -42,8 +42,13 @@ export default class Plugin {
 
     // get dataset
     var data = el.dataset;
+    // avoid loading twice
+    if (data.scriptinLoading) return;
+
     // get url
     var url = data.scriptin;
+
+    el.setAttribute('data-scriptin-loading', 'true');
 
     // make script data for our call
     var script = { url };
@@ -75,6 +80,7 @@ export default class Plugin {
         } else {
           this.el.setAttribute('src', script.content.data);
           el.classList.remove('scriptin-loading');
+          el.removeAttribute('data-scriptin-loading');
 
           if (self.hideLoader && typeof self.hideLoader == 'function') {
             self.hideLoader(el);

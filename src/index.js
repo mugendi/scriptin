@@ -22,6 +22,7 @@ import {
   merge,
   toDataURI,
 } from "./lib/utils/general.js";
+import { pluginsOrder } from "./lib/settings.js";
 
 // these characters are used in place of +ve/affirmative or the opposite statements and words
 // This is done on purpose in a bid to make this script as tiny as possible
@@ -131,18 +132,14 @@ class Scriptin {
   async __init_plugins() {
     var self = this;
     try {
+      self.pluginsLoaded = self.pluginsLoaded || [];
+
       // load
       self.events.on("plugin-loaded", async function (script) {
         var name = script.url.split("/").pop().replace(/\.js$/, "");
-        // console.log('loaded', script.url, name);
-
-        if (self.loadedPlugins[name]) return;
-
         var cName = "ScriptIn" + name;
         var cls = window[cName];
         var parent = script.parent;
-
-        // console.log({parent});
 
         if (isClass(cls)) {
           // pass all methods of Scriptin class
@@ -151,24 +148,24 @@ class Scriptin {
 
           if (plugin.dependencies) {
             var deps = arrify(plugin.dependencies);
+
+            // do not load existing deps
+            // console.log(deps, self.pluginsLoaded);
             // load plugin deps
             await self.__loadPlugins(deps, name);
           }
 
-          // console.log(plugin);
-          // plugin.name = 'sssss'
-          // plugin.__prototype.pluginName = name;
           // init
           plugin.init && plugin.init();
-
-          self.loadedPlugins[name] = plugin;
         }
       });
 
-      var plugins = Object.keys(this.options.plugins || {});
+      // order plugins properly
+      var pluginsObjKeys = Object.keys(this.options.plugins);
+      var plugins = pluginsOrder.filter((p) => pluginsObjKeys.indexOf(p) > -1);
 
       // load plugins
-      this.__loadPlugins(plugins);
+      await this.__loadPlugins(plugins);
 
       // await
     } catch (error) {
@@ -178,11 +175,16 @@ class Scriptin {
 
   async __loadPlugins(plugins, parent) {
     var plugin;
-    var extra = {};
 
     //
     for (var i in plugins) {
       plugin = plugins[i];
+
+      var name = plugin.split("/").pop().replace(/\.js$/, "");
+
+      if (this.pluginsLoaded.indexOf(name) > -1) continue;
+
+      this.pluginsLoaded.push(name);
 
       var url;
 
