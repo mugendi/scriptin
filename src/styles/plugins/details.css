@@ -20,11 +20,17 @@
 
 .scriptin-details ul {
   margin: 0;
-  padding: 0 0 0 10px;
+  padding-left: 20px;
+}
+
+.scriptin-details ul li + li {
+  margin-top: 5px;
+  border-top: 1px solid #f0f0f0;
+  padding: 3px 0 0;
 }
 
 .scriptin-details-group + .scriptin-details-group h4 {
   border-top: 1px solid #eee;
-  margin-top: 10px ;
-  padding-top: 10px ;
+  margin-top: 10px;
+  padding-top: 10px;
 }

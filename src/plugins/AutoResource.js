@@ -10,6 +10,8 @@ export default class Plugin {
     // inherit Scriptin (this.Scriptin) context which we will need
     Object.assign(this, ctx);
 
+    this.dependencies = ['IsLoading'];
+
   }
   
   init() {

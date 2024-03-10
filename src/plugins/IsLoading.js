@@ -5,7 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
-import css from '../styles/loader.css';
+import css from '../styles/plugins/loader.css';
 
 export default class Plugin {
   constructor(ctx) {
@@ -14,6 +14,8 @@ export default class Plugin {
 
     ctx.showLoader = this.showLoader.bind(this);
     ctx.hideLoader = this.hideLoader.bind(this);
+
+    this.dependencies = ['__styler', 'AutoResource'];
 
   }
 

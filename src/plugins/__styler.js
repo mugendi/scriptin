@@ -19,12 +19,13 @@ export default class Plugin {
   __getPluginStyles(pluginName, css = '') {
     var customStyles = this.options?.plugins[pluginName]?.styles || null;
 
-    var styleString;
+    var styleString = '';
+
     if (customStyles) {
       styleString = styleToCss(customStyles);
     }
 
-    return styleString || css;
+    return css + '\n\n' + styleString;
   }
 
   injectStyles(css = '') {
@@ -37,7 +38,7 @@ export default class Plugin {
     style.textContent = styleString;
 
     head.appendChild(style);
-    
-    return styleString
+
+    return styleString;
   }
 }

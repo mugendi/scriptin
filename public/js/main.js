@@ -11,37 +11,28 @@ let options = {
   debug: true,
 
   plugins: {
-    IsLoading: {
-      styles: {
-        background: '#f1f1f1',
-        border: '#ddd 1px solid',
-        'border-radius': '20px',
-        'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-      },
-    },
-    Display: {
-      styles: {
-        // h4: {
-        //   fontSize: '12px',
-        // },
-      },
-    },
+    // IsLoading: {
+    //   styles: {
+    //     background: '#f1f1f1',
+    //     border: '#ddd 1px solid',
+    //     'border-radius': '20px',
+    //     'box-shadow': 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+    //   },
+    // },
+    // Details: {
+    //   showHeaders: true,
+    //   filter: ['meta', 'cache'],
+    //   styles: {
+    //     '.scriptin-details h4': {
+    //       color: 'red',
+    //     },
+    //   },
+    // },
+    AutoResource:{}
   },
 };
 let scriptin = new ScriptIn(options);
 
-scriptin.plugins([
-  [
-    'Details',
-    {
-      showHeaders: true,
-      filter: ['meta.type', 'file'],
-    },
-  ],
-  'http://localhost:5000/plugins/IsLoading.js',
-  'AutoResource',
-  // 'Details'
-]);
 
 scriptin.on('loaded', (data) => {
   // console.log('loaded', data.url);

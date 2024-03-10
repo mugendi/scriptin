@@ -17,14 +17,15 @@ import { babel } from '@rollup/plugin-babel';
 import clean from '@rollup-extras/plugin-clean';
 import css from 'rollup-plugin-import-css';
 import hmr from 'rollup-plugin-reloadsite';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import { readdirSync } from 'fs';
 import path from 'path';
 
 import { fileURLToPath } from 'url';
 import merge from 'lodash.merge';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const brotliPromise = promisify(brotliCompress);
 
@@ -39,6 +40,8 @@ const defaultConfig = {
   },
   plugins: [
     production && clean(),
+
+    nodeResolve(),
 
     css(),
 
@@ -98,7 +101,7 @@ const defaultConfig = {
         dirs: ['./dist', './public'],
         // defaults tp 35729
         port: 35729,
-        filter: ['**/scriptin.js'],
+        filter: '**/scriptin.js',
       }),
   ],
 };

@@ -48,7 +48,13 @@ class Scriptin {
 
     this.Scriptin = this;
 
+    this.__init();
+    this.loadedPlugins = {};
+  }
+
+  __init() {
     this.__listener();
+    this.__init_plugins();
   }
 
   on(evs, fn) {
@@ -95,10 +101,8 @@ class Scriptin {
         if (loadedScript) {
           var event = options?.event || "loaded";
           var parent = options?.parent;
-          var extra = options?.extra || {};
 
           loadedScript.parent = parent;
-          loadedScript.extra = extra;
 
           self.events.emit(event, loadedScript);
           self.events.emit(loadedScript.url, loadedScript);
@@ -124,29 +128,26 @@ class Scriptin {
     }
   }
 
-  async plugins(plugins) {
+  async __init_plugins() {
     var self = this;
     try {
-      plugins = arrify(plugins);
-
       // load
       self.events.on("plugin-loaded", async function (script) {
         var name = script.url.split("/").pop().replace(/\.js$/, "");
         // console.log('loaded', script.url, name);
 
+        if (self.loadedPlugins[name]) return;
+
         var cName = "ScriptIn" + name;
         var cls = window[cName];
         var parent = script.parent;
-        var pluginOptions = script.extra;
 
         // console.log({parent});
 
         if (isClass(cls)) {
           // pass all methods of Scriptin class
 
-          let plugin = new cls(
-            merge(self, { pluginName: name, parent, pluginOptions }),
-          );
+          let plugin = new cls(merge(self, { pluginName: name, parent }));
 
           if (plugin.dependencies) {
             var deps = arrify(plugin.dependencies);
@@ -159,8 +160,12 @@ class Scriptin {
           // plugin.__prototype.pluginName = name;
           // init
           plugin.init && plugin.init();
+
+          self.loadedPlugins[name] = plugin;
         }
       });
+
+      var plugins = Object.keys(this.options.plugins || {});
 
       // load plugins
       this.__loadPlugins(plugins);
@@ -179,11 +184,6 @@ class Scriptin {
     for (var i in plugins) {
       plugin = plugins[i];
 
-      if (Array.isArray(plugin)) {
-        extra = plugin[1];
-        plugin = plugin[0];
-      }
-
       var url;
 
       // load plugin from absolute link too
@@ -193,15 +193,13 @@ class Scriptin {
         url = this.scriptHost + "/plugins/" + plugin + ".js";
       }
 
-      await this.load(url, { event: "plugin-loaded", parent, extra });
+      await this.load(url, { event: "plugin-loaded", parent });
     }
   }
 
   async __loadScript(script) {
     var self = this;
     var now = new Date();
-
-    // await this.store.clear();
 
     script.meta.cache = { enabled: N };
 
@@ -299,9 +297,12 @@ class Scriptin {
   __listener() {
     var self = this;
 
+    // console.log('>>>>');
+
     // listen for cntrl + R
     document.onkeydown = async function KeyPress(e) {
       // console.log(e);
+      // e.preventDefault();
 
       KeyPress.keys = KeyPress.keys || [];
       KeyPress.intVar = KeyPress.intVar;
@@ -320,6 +321,7 @@ class Scriptin {
       }
 
       // console.log(KeyPress.keys );
+
       if (
         KeyPress.keys.indexOf("KeyR") > -1 &&
         KeyPress.keys.indexOf("CTRL") > -1

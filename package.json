@@ -49,6 +49,8 @@
     "zlib": "^1.0.5"
   },
   "dependencies": {
-    "lodash.merge": "^4.6.2"
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "lodash.merge": "^4.6.2",
+    "pretty-bytes": "^6.1.1"
   }
 }

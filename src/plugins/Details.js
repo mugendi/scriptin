@@ -6,24 +6,28 @@
  */
 
 import { titleCase } from '../lib/utils/general';
-import css from '../styles/details.css';
+import prettyBytes from 'pretty-bytes';
+import css from '../styles/plugins/details.css';
 
 export default class Plugin {
   constructor(ctx) {
     // inherit Scriptin (this.Scriptin) context which we will need
     Object.assign(this, ctx);
 
-    this.dependencies = ['__styler'];
+    this.dependencies = ['__styler', 'AutoResource'];
+    this.pluginOptions = this.options?.plugins?.Details||{}
   }
 
   init() {
     // Inject styles
     this.Scriptin.injectStyles(css);
+
     // addDetails
     this.addDetails();
   }
 
   makeFilter() {
+
     var filter = this.pluginOptions.filter || null;
 
     // must be an array
@@ -37,7 +41,6 @@ export default class Plugin {
         if (arr.length == 1) {
           arr.push(arr[0] + '.*');
         }
-        // console.log(arr);
         arr.forEach((v) => {
           if (filter.indexOf(v) == -1) {
             filter.push(v);
@@ -116,6 +119,10 @@ export default class Plugin {
 
               if (filter?.indexOf(key) == -1 && filter?.indexOf(i + '.*') == -1)
                 continue;
+
+              if(key=='meta.size'){
+                details[i][j] = prettyBytes( details[i][j] )
+              }
 
               html =
                 html +
