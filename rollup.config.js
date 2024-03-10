@@ -5,18 +5,18 @@
  * https://opensource.org/licenses/MIT
  */
 
-import {  promisify } from 'util';
+import { promisify } from 'util';
 import { brotliCompress } from 'zlib';
 import { terser } from 'rollup-plugin-terser';
 // Using a modified version that adds the last-modified header...
 import serve from './dev/rollup-plugin-serve/index.cjs.js';
-import hmr from 'rollup-plugin-reloadsite';
 import sizes from 'rollup-plugin-sizes';
 import filesize from 'rollup-plugin-filesize';
 import gzipPlugin from 'rollup-plugin-gzip';
 import { babel } from '@rollup/plugin-babel';
 import clean from '@rollup-extras/plugin-clean';
-import css from "rollup-plugin-import-css";
+import css from 'rollup-plugin-import-css';
+import hmr from 'rollup-plugin-reloadsite';
 
 import { readdirSync } from 'fs';
 import path from 'path';
@@ -38,10 +38,10 @@ const defaultConfig = {
     sourcemap: true,
   },
   plugins: [
-    clean(),
+    production && clean(),
 
     css(),
-     
+
     babel({
       babelHelpers: 'bundled',
       exclude: 'node_modules/**',
@@ -59,7 +59,12 @@ const defaultConfig = {
     }),
 
     // uglify
-    production && terser(),
+    production &&
+      terser({
+        format: {
+          comments: false,
+        },
+      }),
 
     // GZIP compression as .gz files
     production && gzipPlugin(),
@@ -93,6 +98,7 @@ const defaultConfig = {
         dirs: ['./dist', './public'],
         // defaults tp 35729
         port: 35729,
+        filter: ['**/scriptin.js'],
       }),
   ],
 };
@@ -111,20 +117,19 @@ let configs = [
   ),
 ];
 
-
 // get all plugins...
 const plugins = readdirSync('./src/plugins');
 const pluginsConf = plugins.map((fileName) => {
-  let name =  fileName.replace(/\.js$/, '');
+  let name = fileName.replace(/\.js$/, '');
 
-  let config =  merge(
+  let config = merge(
     {
       input: {
         ['plugins/' + name]: 'src/plugins/' + fileName,
       },
       output: {
         format: 'iife',
-        name:'ScriptIn' + name,
+        name: 'ScriptIn' + name,
       },
     },
     defaultConfig
@@ -136,7 +141,6 @@ const pluginsConf = plugins.map((fileName) => {
 
   return config;
 });
-
 
 // export default [defaultConf].concat(pluginsConf);
 export default configs.concat(pluginsConf);

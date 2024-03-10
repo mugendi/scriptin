@@ -367,7 +367,7 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@jridgewell/sourcemap-codec@^1.4.10", "@jridgewell/sourcemap-codec@^1.4.14", "@jridgewell/sourcemap-codec@^1.4.15":
+"@jridgewell/sourcemap-codec@^1.4.10", "@jridgewell/sourcemap-codec@^1.4.14":
   version "1.4.15"
   resolved "https://registry.yarnpkg.com/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.4.15.tgz#d7c6e6755c78567a951e04ab52ef0fd26de59f32"
   integrity sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==
@@ -1504,13 +1504,6 @@ lru-cache@^7.4.4, lru-cache@^7.5.1, lru-cache@^7.7.1:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
   integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
-magic-string@^0.30.5:
-  version "0.30.8"
-  resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.30.8.tgz#14e8624246d2bedba70d5462aa99ac9681844613"
-  integrity sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==
-  dependencies:
-    "@jridgewell/sourcemap-codec" "^1.4.15"
-
 make-fetch-happen@^10.0.3:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/make-fetch-happen/-/make-fetch-happen-10.2.1.tgz#f5e3835c5e9817b617f2770870d9492d28678164"
@@ -1882,10 +1875,10 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
-picomatch@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-3.0.1.tgz#817033161def55ec9638567a2f3bbc876b3e7516"
-  integrity sha512-I3EurrIQMlRc9IaAZnqRR044Phh2DXY+55o7uJ0V+hYZAcQYSuFWsc9q5PvyDHUSCe1Qxn/iBz+78s86zWnGag==
+picomatch@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.1.tgz#68c26c8837399e5819edce48590412ea07f17a07"
+  integrity sha512-xUXwsxNjwTQ8K3GnT4pCJm+xq3RUPQbmkYJTP5aFIfNIvbcc/4MUxgBaaRSZJ6yGJZiGSyYlM6MzwTsRk8SYCg==
 
 prettier@^3.2.4:
   version "3.2.4"
@@ -1956,10 +1949,10 @@ regenerator-runtime@^0.14.0:
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz#356ade10263f685dda125100cd862c1db895327f"
   integrity sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==
 
-reloadsite@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/reloadsite/-/reloadsite-1.0.7.tgz#086585998d776668968bbcc1398005b2c7f585de"
-  integrity sha512-BpgGHSNiu3N5UMNC/V2jlolQkIy35GSekKY/tuRp4zikS1uz+KYuza/R2+f22mQQ+e4hNZovfi9nBthz3RI0Ow==
+reloadsite@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/reloadsite/-/reloadsite-1.0.9.tgz#e0600af7406f7b1099d06df89378124b0b22be7f"
+  integrity sha512-Q+8dyDuMnhILfLGYqCd6CXbBRqzn/Upa3u5QXZiQCH2J2VGUi+5UWb/u/izihnjUzslIxodH6UGAoh6HkBNvsg==
   dependencies:
     chokidar "^3.5.2"
     debug-symbols "^1.0.2"
@@ -2012,14 +2005,13 @@ rollup-plugin-import-css@^3.5.0:
   dependencies:
     "@rollup/pluginutils" "^5.0.4"
 
-rollup-plugin-reloadsite@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-reloadsite/-/rollup-plugin-reloadsite-1.0.2.tgz#c59ca5e29eae5038ab0659b76c1283f21e856a4c"
-  integrity sha512-G6wIO0xllUS28H22ETshfARw8xFEyuV0XFJ0bK+HUHtB1s6QR669KebNMQLuKYOKGrooHkLJZez/GCtoKYKzkw==
+rollup-plugin-reloadsite@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-reloadsite/-/rollup-plugin-reloadsite-1.0.4.tgz#2a0e9c13ca1b4a8b5e283b8ac6499ae5c4e98531"
+  integrity sha512-1LyyT+SxnVhjrJKMzAMTM1YvaNLBmRLNqCIIaPsxRDej6Gk62XNp3XYsuNymGoiEzUVZH6WtBT+cWF+gbNXmLA==
   dependencies:
-    magic-string "^0.30.5"
-    picomatch "^3.0.1"
-    reloadsite "^1.0.7"
+    picomatch "^4.0.1"
+    reloadsite "^1.0.9"
     tcp-port-used "^1.0.2"
 
 rollup-plugin-serve@^1.1.1:

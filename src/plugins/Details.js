@@ -5,6 +5,7 @@
  * https://opensource.org/licenses/MIT
  */
 
+import { titleCase } from '../lib/utils/general';
 import css from '../styles/details.css';
 
 export default class Plugin {
@@ -33,8 +34,8 @@ export default class Plugin {
     if (filter) {
       for (var i in filter) {
         let arr = filter[i].split('.');
-        if(arr.length==1){
-          arr.push(arr[0]+'.*')
+        if (arr.length == 1) {
+          arr.push(arr[0] + '.*');
         }
         // console.log(arr);
         arr.forEach((v) => {
@@ -59,7 +60,6 @@ export default class Plugin {
     if (showHeaders == undefined) {
       showHeaders = true;
     }
-
 
     // Listen for load event
     this.Scriptin.events.on(
@@ -105,7 +105,7 @@ export default class Plugin {
               html =
                 html +
                 '<h4 class="scriptin-details-category">' +
-                i.toUpperCase() +
+                titleCase(i) +
                 '</h4>';
             }
 
@@ -114,13 +114,14 @@ export default class Plugin {
             for (var j in details[i]) {
               var key = i + '.' + j;
 
-              if (filter?.indexOf(key) == -1 && filter?.indexOf(i+'.*') == -1) continue;
+              if (filter?.indexOf(key) == -1 && filter?.indexOf(i + '.*') == -1)
+                continue;
 
               html =
                 html +
                 '<li>' +
                 '<strong>' +
-                j +
+                titleCase(j) +
                 ': </strong> ' +
                 '<span>' +
                 details[i][j] +

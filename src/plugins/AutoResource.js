@@ -11,7 +11,7 @@ export default class Plugin {
     Object.assign(this, ctx);
 
   }
-
+  
   init() {
     // load resources
     this.loadResources();

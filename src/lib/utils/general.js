@@ -59,6 +59,11 @@ export function injectScript(script) {
   return tagEl;
 }
 
+
+export function delay (time=1000) {
+   return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 export function hash(s) {
   s = String(s);
   var h = 0,
@@ -112,4 +117,12 @@ export function isFunction(val) {
 
 export function isAbsoluteURL(url){
   return /^(?:[a-z+]+:)?\/\//.test(url)
+}
+
+export function titleCase(str) {
+  str = str.toLowerCase().split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
 }

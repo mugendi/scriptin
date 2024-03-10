@@ -35,7 +35,7 @@ scriptin.plugins([
     'Details',
     {
       showHeaders: true,
-      filter: ['meta.type'],
+      filter: ['meta.type', 'file'],
     },
   ],
   'http://localhost:5000/plugins/IsLoading.js',
