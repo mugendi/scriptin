@@ -29,7 +29,7 @@ let options = {
       },
     },
     //  Details:{},
-    // AutoResource:{},
+    AutoResource:{},
     // Details:{},
    
   },

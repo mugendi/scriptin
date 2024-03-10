@@ -141,6 +141,8 @@ class Scriptin {
         var cls = window[cName];
         var parent = script.parent;
 
+        console.log(name);
+
         if (isClass(cls)) {
           // pass all methods of Scriptin class
 
@@ -180,12 +182,6 @@ class Scriptin {
     for (var i in plugins) {
       plugin = plugins[i];
 
-      var name = plugin.split("/").pop().replace(/\.js$/, "");
-
-      if (this.pluginsLoaded.indexOf(name) > -1) continue;
-
-      this.pluginsLoaded.push(name);
-
       var url;
 
       // load plugin from absolute link too
@@ -194,6 +190,10 @@ class Scriptin {
       } else {
         url = this.scriptHost + "/plugins/" + plugin + ".js";
       }
+
+      if (this.pluginsLoaded.indexOf(url) > -1) continue;
+
+      this.pluginsLoaded.push(url);
 
       await this.load(url, { event: "plugin-loaded", parent });
     }
