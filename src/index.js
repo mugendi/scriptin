@@ -318,7 +318,7 @@ class Scriptin {
         KeyPress.keys.push(e.code);
       }
 
-      console.log(KeyPress.keys);
+      // console.log(KeyPress.keys);
 
       if (
         KeyPress.keys.indexOf("KeyR") > -1 &&
