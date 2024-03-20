@@ -299,8 +299,8 @@ class Scriptin {
 
     // listen for cntrl + R
     async function KeyPress(e) {
-      console.log(e);
-      e.preventDefault();
+      // console.log(e);
+      // e.preventDefault();
 
       KeyPress.keys = KeyPress.keys || [];
       KeyPress.intVar = KeyPress.intVar;
