@@ -297,12 +297,10 @@ class Scriptin {
   __listener() {
     var self = this;
 
-    // console.log('>>>>');
-
     // listen for cntrl + R
-    document.onkeydown = async function KeyPress(e) {
-      // console.log(e);
-      // e.preventDefault();
+    async function KeyPress(e) {
+      console.log(e);
+      e.preventDefault();
 
       KeyPress.keys = KeyPress.keys || [];
       KeyPress.intVar = KeyPress.intVar;
@@ -320,7 +318,7 @@ class Scriptin {
         KeyPress.keys.push(e.code);
       }
 
-      // console.log(KeyPress.keys );
+      console.log(KeyPress.keys);
 
       if (
         KeyPress.keys.indexOf("KeyR") > -1 &&
@@ -330,7 +328,9 @@ class Scriptin {
         await self.store.clear();
         window.location.reload();
       }
-    };
+    }
+
+    document.addEventListener("keydown", KeyPress);
 
     // Listen for dirty state
     var intVar;
