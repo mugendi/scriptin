@@ -188,6 +188,7 @@ function found(response, filePath, content) {
   response.writeHead(200, {
     'Content-Type': mime.getType(filePath),
     'Last-Modified': stat.mtime,
+    'Access-Control-Allow-Origin': '*'
   });
   // response.writeHead(200, { 'xsxxsxs': mime.getType(filePath) });
   response.end(content, 'utf-8');

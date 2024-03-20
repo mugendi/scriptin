@@ -5,4 +5,4 @@
  * https://opensource.org/licenses/MIT
  */
 
-export const pluginsOrder = ['IsLoading', 'Details', 'AutoResponse'];
+export const pluginsOrder = ['IsLoading', 'Details', 'AutoResource'];
