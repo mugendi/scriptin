@@ -1,0 +1,81 @@
+/**
+ * Copyright (c) 2024 Anthony Mugendi
+ * 
+ * This software is released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
+.scriptin-details {
+  border: 1px solid #eee;
+  padding: 10px;
+  margin: 5px;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+.scriptin-details h4 {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.scriptin-details ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.scriptin-details ul li + li {
+  margin-top: 5px;
+  border-top: 1px solid #f0f0f0;
+  padding: 3px 0 0;
+}
+
+.scriptin-details-group + .scriptin-details-group h4 {
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+/**
+ * Copyright (c) 2024 Anthony Mugendi
+ * 
+ * This software is released under the MIT License.
+ * https://opensource.org/licenses/MIT
+ */
+
+
+
+.scriptin-loading, .scriptin-loader {
+  background: rgba(75, 11, 194,.9);
+  min-width: 76px;
+  min-height: 36px;
+  border-radius: 10px;
+  --c:no-repeat radial-gradient(farthest-side,#000 92%,#0000);
+  --s:18px 18px;
+  -webkit-mask:
+    var(--c) left  10% top 50%,
+    var(--c) center,
+    var(--c) right 10% top 50%,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+          mask-composite:exclude;
+  animation: l1 1.5s infinite;
+}
+
+
+
+@keyframes l1 {
+  0%    {-webkit-mask-size:0    0  ,0    0  ,0    0  ,auto}
+  16.67%{-webkit-mask-size:var(--s),0    0  ,0    0  ,auto}
+  33.33%{-webkit-mask-size:var(--s),var(--s),0    0  ,auto}
+  50%   {-webkit-mask-size:var(--s),var(--s),var(--s),auto}
+  66.67%{-webkit-mask-size:0    0  ,var(--s),var(--s),auto}
+  83.33%{-webkit-mask-size:0    0  ,0    0  ,var(--s),auto}
+  100%  {-webkit-mask-size:0    0  ,0    0  ,0    0  ,auto}
+}
+
+
+
+.scriptin-hidden {
+  display: none !important;
+}
+
