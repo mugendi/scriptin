@@ -141,8 +141,6 @@ class Scriptin {
         var cls = window[cName];
         var parent = script.parent;
 
-        console.log(name);
-
         if (isClass(cls)) {
           // pass all methods of Scriptin class
 
