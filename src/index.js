@@ -74,6 +74,8 @@ class Scriptin {
       // 2. Filter & format scripts
       var script;
 
+      var promises = [];
+
       // load each script
       for (var i in scripts) {
         script = scripts[i];
@@ -99,6 +101,8 @@ class Scriptin {
         // 3. Now load script
         var loadedScript = await this.__loadScript(script);
 
+        promises.push(loadedScript);
+
         if (loadedScript) {
           var event = options?.event || "loaded";
           var parent = options?.parent;
@@ -111,6 +115,17 @@ class Scriptin {
           self.events.emit(loadedScript.content.category, loadedScript);
         }
       }
+
+      return Promise.all(promises)
+        .then((resp) => {
+          var obj = {};
+          for (var i in resp) {
+            obj[resp[i].url] = resp[i];
+          }
+
+          return obj;
+        })
+        .catch(console.error);
     } catch (error) {
       // Handle all errors
 
