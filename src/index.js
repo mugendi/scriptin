@@ -116,16 +116,14 @@ class Scriptin {
         }
       }
 
-      return Promise.all(promises)
-        .then((resp) => {
-          var obj = {};
-          for (var i in resp) {
-            obj[resp[i].url] = resp[i];
-          }
+      return await Promise.all(promises).then((resp) => {
+        var obj = {};
+        for (var i in resp) {
+          obj[resp[i].url] = resp[i];
+        }
 
-          return obj;
-        })
-        .catch(console.error);
+        return obj;
+      });
     } catch (error) {
       // Handle all errors
 
