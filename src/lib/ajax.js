@@ -5,6 +5,8 @@
  * https://opensource.org/licenses/MIT
  */
 
+import isAbsoluteUrl from './utils/url';
+
 // Ref:https://gist.github.com/Danilovonline/1b87ef2ff1b1e0b19714a8b2e6246856
 function httpRequest(
   url,
@@ -128,6 +130,10 @@ function httpRequest(
 
   method = method.toUpperCase();
 
+  url = formatURL(url);
+
+  console.log(url);
+
   xhr.open(method, url, true);
 
   xhr.withCredentials = true;
@@ -135,7 +141,6 @@ function httpRequest(
   if (opts.responseType) {
     xhr.responseType = opts.responseType;
   }
-  //
 
   for (var key in headers) {
     xhr.setRequestHeader(key, headers[key]);
@@ -144,8 +149,20 @@ function httpRequest(
   xhr.send(data);
 }
 
+function formatURL(url) {
+  if (isAbsoluteUrl(url)) {
+    return url;
+  }
+
+  url = new URL(url, document.baseURI).href;
+
+  return url;
+}
+
 class Ajax {
-  constructor({ methods = ['get', 'post', 'head', 'put', 'post', 'patch', 'delete'] } = {}) {
+  constructor({
+    methods = ['get', 'post', 'head', 'put', 'post', 'patch', 'delete'],
+  } = {}) {
     var self = this;
 
     methods.forEach(function (method) {
