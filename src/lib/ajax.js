@@ -145,7 +145,7 @@ function httpRequest(
 }
 
 class Ajax {
-  constructor({ methods = ['get', 'post', 'head', 'put', 'post'] } = {}) {
+  constructor({ methods = ['get', 'post', 'head', 'put', 'post', 'patch', 'delete'] } = {}) {
     var self = this;
 
     methods.forEach(function (method) {
