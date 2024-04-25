@@ -35,6 +35,7 @@ function httpRequest(
   }
 
   var data2 = [];
+
   if (typeof data == 'object') {
     // format data
     if (headers['content-type'] == 'application/json') {
@@ -48,6 +49,7 @@ function httpRequest(
       data = data2.join('&');
     }
   }
+
   if (typeof XMLHttpRequest !== 'undefined') {
     xhr = new XMLHttpRequest();
   } else {
@@ -126,11 +128,9 @@ function httpRequest(
 
   method = method.toUpperCase();
 
-  // console.log({method});
-
   xhr.open(method, url, true);
 
-  // console.log('TTT', url, opts);
+  xhr.withCredentials = true;
 
   if (opts.responseType) {
     xhr.responseType = opts.responseType;
