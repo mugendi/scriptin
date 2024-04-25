@@ -134,7 +134,7 @@ function httpRequest(
 
   xhr.open(method, url, true);
 
-  xhr.withCredentials = true;
+  // xhr.withCredentials = true;
 
   if (opts.responseType) {
     xhr.responseType = opts.responseType;
