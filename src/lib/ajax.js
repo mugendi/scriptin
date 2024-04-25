@@ -132,8 +132,6 @@ function httpRequest(
 
   url = formatURL(url);
 
-  console.log(url);
-
   xhr.open(method, url, true);
 
   xhr.withCredentials = true;
