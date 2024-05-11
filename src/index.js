@@ -39,7 +39,13 @@ class Scriptin {
     this.scriptHost = scriptHost;
 
     this.options = merge(
-      { ttl: 0, injectToHead: true, debug: false, ignoreURLParams: true },
+      {
+        ttl: 0,
+        injectToHead: true,
+        debug: false,
+        ignoreURLParams: true,
+        plugins: {},
+      },
       options,
     );
 
