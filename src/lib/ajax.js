@@ -19,7 +19,9 @@ function httpRequest(
   var xhr;
 
   // defaults options
-  var defaultOpts = { headers: {} };
+  var defaultOpts = { headers: {
+    'Access-Control-Allow-Origin': '*'
+  } };
 
   method = method.toUpperCase();
 
@@ -141,6 +143,7 @@ function httpRequest(
   }
 
   for (var key in headers) {
+    // console.log({ [key]: headers[key] });
     xhr.setRequestHeader(key, headers[key]);
   }
 
