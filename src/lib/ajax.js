@@ -20,7 +20,6 @@ function httpRequest(
 
   // defaults options
   var defaultOpts = { headers: {
-    'Access-Control-Allow-Origin': '*'
   } };
 
   method = method.toUpperCase();
